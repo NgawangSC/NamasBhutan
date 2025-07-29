@@ -313,9 +313,9 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const addBlog = async (blog) => {
+  const addBlog = async (blog, imageFile = null) => {
     try {
-      const response = await ApiService.createBlog(blog);
+      const response = await ApiService.createBlog(blog, imageFile);
       const newBlog = response.data;
       
       setData(prev => ({
@@ -328,14 +328,30 @@ export const DataProvider = ({ children }) => {
       
       return newBlog;
     } catch (err) {
-      console.error('Error creating blog:', err);
-      throw err;
+      console.error('Error creating blog (falling back to local storage):', err);
+      
+      // Fallback: Create blog locally if server is not available
+      const newBlog = {
+        ...blog,
+        id: Date.now(), // Simple ID generation
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        // If there's an image file, create a blob URL for local preview
+        image: imageFile ? URL.createObjectURL(imageFile) : blog.image || ''
+      };
+      
+      setData(prev => ({
+        ...prev,
+        blogs: [...prev.blogs, newBlog]
+      }));
+      
+      return newBlog;
     }
   };
 
-  const updateBlog = async (id, updates) => {
+  const updateBlog = async (id, updates, imageFile = null) => {
     try {
-      const response = await ApiService.updateBlog(id, updates);
+      const response = await ApiService.updateBlog(id, updates, imageFile);
       const updatedBlog = response.data;
       
       setData(prev => ({
@@ -348,8 +364,23 @@ export const DataProvider = ({ children }) => {
       
       return updatedBlog;
     } catch (err) {
-      console.error('Error updating blog:', err);
-      throw err;
+      console.error('Error updating blog (falling back to local storage):', err);
+      
+      // Fallback: Update blog locally if server is not available
+      const updatedBlog = {
+        ...updates,
+        id,
+        updatedAt: new Date().toISOString(),
+        // If there's an image file, create a blob URL for local preview
+        image: imageFile ? URL.createObjectURL(imageFile) : updates.image || ''
+      };
+      
+      setData(prev => ({
+        ...prev,
+        blogs: prev.blogs.map(b => b.id === id ? { ...b, ...updatedBlog } : b)
+      }));
+      
+      return updatedBlog;
     }
   };
 

@@ -67,6 +67,11 @@ const BlogsManager = () => {
   }
 
   const handleImageChange = (file) => {
+    // Clean up previous blob URL to prevent memory leaks
+    if (selectedImage && formData.image && formData.image.startsWith('blob:')) {
+      URL.revokeObjectURL(formData.image)
+    }
+    
     setSelectedImage(file)
     if (file) {
       // Create a temporary URL for the image to store in formData
@@ -83,7 +88,7 @@ const BlogsManager = () => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     const blogData = {
@@ -94,23 +99,31 @@ const BlogsManager = () => {
         .filter((tag) => tag),
     }
 
-    // If there's a selected image file, use it instead of the URL
+    // Remove the blob URL from blogData since we'll pass the file separately
     if (selectedImage) {
-      // In a real application, you would upload the file to a server here
-      // For now, we'll create a blob URL
-      blogData.image = URL.createObjectURL(selectedImage)
+      // Don't include the blob URL in the data sent to server
+      delete blogData.image
     }
 
-    if (editingBlog) {
-      updateBlog(editingBlog.id, blogData)
-    } else {
-      addBlog(blogData)
+    try {
+      if (editingBlog) {
+        await updateBlog(editingBlog.id, blogData, selectedImage)
+      } else {
+        await addBlog(blogData, selectedImage)
+      }
+      resetForm()
+    } catch (error) {
+      console.error('Error saving blog:', error)
+      alert('Error saving blog. Please try again.')
     }
-
-    resetForm()
   }
 
   const resetForm = () => {
+    // Clean up blob URL to prevent memory leaks
+    if (formData.image && formData.image.startsWith('blob:')) {
+      URL.revokeObjectURL(formData.image)
+    }
+    
     setFormData({
       title: "",
       content: "",

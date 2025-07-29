@@ -38,8 +38,16 @@ export const getImageUrl = (imagePath, bustCache = false) => {
 function constructImageUrl(imagePath, bustCache = false) {
   let fullUrl;
   
-  // If it's already a full URL, return as is
+  // If it's already a full URL (http/https), return as is
   if (imagePath.startsWith('http')) {
+    fullUrl = imagePath;
+  }
+  // If it's a blob URL (from file uploads), return as is
+  else if (imagePath.startsWith('blob:')) {
+    fullUrl = imagePath;
+  }
+  // If it's a data URL (base64 images), return as is
+  else if (imagePath.startsWith('data:')) {
     fullUrl = imagePath;
   }
   // If it's a local placeholder image, return as is
@@ -51,8 +59,8 @@ function constructImageUrl(imagePath, bustCache = false) {
     fullUrl = `${SERVER_BASE_URL}${imagePath}`;
   }
   
-  // Add cache-busting parameter if requested
-  if (bustCache) {
+  // Add cache-busting parameter if requested (but not for blob or data URLs)
+  if (bustCache && !imagePath.startsWith('blob:') && !imagePath.startsWith('data:')) {
     const separator = fullUrl.includes('?') ? '&' : '?';
     fullUrl += `${separator}v=${Date.now()}`;
   }
@@ -118,3 +126,4 @@ export const getImageUrlWithFallback = (imagePath, fallback = "/images/placehold
   if (!imagePath) return fallback;
   return getImageUrl(imagePath);
 };
+
