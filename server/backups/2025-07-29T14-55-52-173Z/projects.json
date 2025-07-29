@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "Test Project",
+    "category": "Residential",
+    "location": "Thimphu",
+    "year": "2024",
+    "status": "Ongoing",
+    "client": "",
+    "designTeam": "NAMAS Architecture",
+    "description": "Test project for persistence",
+    "featured": false,
+    "image": "/images/placeholder.png",
+    "images": [],
+    "createdAt": "2025-07-29T14:55:38.879Z"
+  }
+]
