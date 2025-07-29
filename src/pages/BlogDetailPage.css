@@ -4,43 +4,29 @@
   padding-top: 80px;
 }
 
-/* Force header to be black on blog detail page - Navigation Header */
-body .blog-detail-page header,
-body .blog-detail-page .header,
-body .blog-detail-page .header.header-transparent,
-body .blog-detail-page .header.header-scrolled,
-body .blog-detail-page header.header,
-body .blog-detail-page header.header-transparent,
-body .blog-detail-page header.header-scrolled {
+/* Force ONLY the top navigation header to be black on blog detail page */
+/* Target the fixed navigation header component specifically */
+body:has(.blog-detail-page) > div > header.header,
+body:has(.blog-detail-page) > div > .header,
+body:has(.blog-detail-page) > div > .header.header-transparent,
+body:has(.blog-detail-page) > div > .header.header-scrolled {
   background-color: #000 !important;
   background: #000 !important;
   backdrop-filter: none !important;
 }
 
-/* Target the header when it's a child of blog-detail-page */
-.blog-detail-page ~ header,
-.blog-detail-page + header {
+/* Alternative targeting for the navigation header */
+body:has(.blog-detail-page) .header[style*="position: fixed"],
+body:has(.blog-detail-page) header[style*="position: fixed"] {
   background-color: #000 !important;
   background: #000 !important;
 }
 
-/* Additional selectors for any other header variations */
-body .blog-detail-page .navbar,
-body .blog-detail-page .navigation,
-body .blog-detail-page .header-container,
-body .blog-detail-page .header-content {
-  background-color: #000 !important;
-  background: #000 !important;
-}
-
-/* Global override for header when on blog detail page */
-body:has(.blog-detail-page) .header,
-body:has(.blog-detail-page) header,
-body:has(.blog-detail-page) .header.header-transparent,
-body:has(.blog-detail-page) .header.header-scrolled {
-  background-color: #000 !important;
-  background: #000 !important;
-  backdrop-filter: none !important;
+/* Target navigation header container elements */
+body:has(.blog-detail-page) .header > .header-container,
+body:has(.blog-detail-page) .header > .header-content {
+  background-color: transparent !important;
+  background: transparent !important;
 }
 
 .blog-detail-container {
