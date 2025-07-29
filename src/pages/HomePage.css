@@ -557,6 +557,18 @@
   .testimonials-list {
     min-height: auto;
     margin-left: 0;
+    border: none;
+    padding-bottom: 20px;
+  }
+
+  .testimonial-name-btn {
+    transform: none;
+    width: 100%;
+    padding-left: 24px;
+    background: white;
+    border: 2px solid #333;
+    margin-bottom: 10px;
+    border-radius: 4px;
   }
 }
 
@@ -588,6 +600,19 @@
 
   .testimonials-title {
     font-size: 2rem;
+  }
+
+  .testimonials-section {
+    padding: 60px 20px;
+  }
+
+  .testimonial-name-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .testimonial-quote-container {
+    padding: 30px 20px;
   }
 
   .clients-carousel {
