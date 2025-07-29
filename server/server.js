@@ -232,7 +232,7 @@ app.get("/api/projects/:id", (req, res) => {
 })
 
 // POST create new project
-app.post("/api/projects", upload.array("images", 10), (req, res) => {
+app.post("/api/projects", upload.array("images", 25), (req, res) => {
   try {
     const { title, category, location, year, status, client, designTeam, description, featured } = req.body
 
@@ -277,7 +277,7 @@ app.post("/api/projects", upload.array("images", 10), (req, res) => {
 })
 
 // PUT update project
-app.put("/api/projects/:id", upload.array("images", 10), (req, res) => {
+app.put("/api/projects/:id", upload.array("images", 25), (req, res) => {
   try {
     const projectId = Number.parseInt(req.params.id)
     const projectIndex = projects.findIndex((p) => p.id === projectId)
@@ -390,7 +390,7 @@ app.delete("/api/projects/:id", (req, res) => {
 })
 
 // POST add images to existing project
-app.post("/api/projects/:id/images", upload.array("images", 10), (req, res) => {
+app.post("/api/projects/:id/images", upload.array("images", 25), (req, res) => {
   try {
     const projectId = Number.parseInt(req.params.id)
     const projectIndex = projects.findIndex((p) => p.id === projectId)
