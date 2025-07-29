@@ -4,26 +4,43 @@
   padding-top: 80px;
 }
 
-/* Force header to be black on blog detail page */
-.blog-detail-page header,
-.blog-detail-page .header,
-.blog-detail-page .header.header-transparent,
-.blog-detail-page .header.header-scrolled,
-.blog-detail-page header.header,
-.blog-detail-page header.header-transparent,
-.blog-detail-page header.header-scrolled {
+/* Force header to be black on blog detail page - Navigation Header */
+body .blog-detail-page header,
+body .blog-detail-page .header,
+body .blog-detail-page .header.header-transparent,
+body .blog-detail-page .header.header-scrolled,
+body .blog-detail-page header.header,
+body .blog-detail-page header.header-transparent,
+body .blog-detail-page header.header-scrolled {
   background-color: #000 !important;
   background: #000 !important;
   backdrop-filter: none !important;
 }
 
-/* Additional selectors for any other header variations */
-.blog-detail-page .navbar,
-.blog-detail-page .navigation,
-.blog-detail-page .header-container,
-.blog-detail-page .header-content {
+/* Target the header when it's a child of blog-detail-page */
+.blog-detail-page ~ header,
+.blog-detail-page + header {
   background-color: #000 !important;
   background: #000 !important;
+}
+
+/* Additional selectors for any other header variations */
+body .blog-detail-page .navbar,
+body .blog-detail-page .navigation,
+body .blog-detail-page .header-container,
+body .blog-detail-page .header-content {
+  background-color: #000 !important;
+  background: #000 !important;
+}
+
+/* Global override for header when on blog detail page */
+body:has(.blog-detail-page) .header,
+body:has(.blog-detail-page) header,
+body:has(.blog-detail-page) .header.header-transparent,
+body:has(.blog-detail-page) .header.header-scrolled {
+  background-color: #000 !important;
+  background: #000 !important;
+  backdrop-filter: none !important;
 }
 
 .blog-detail-container {
