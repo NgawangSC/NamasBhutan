@@ -526,17 +526,69 @@
 }
 
 /* Responsive Design */
+/* Large tablets and small desktops */
+@media (max-width: 1200px) {
+  .homepage {
+    padding-top: 0;
+  }
+  
+  .about-section {
+    padding: 80px 32px;
+  }
+  
+  .projects-section {
+    padding: 80px 32px;
+  }
+  
+  .testimonials-section {
+    padding: 80px 32px;
+  }
+  
+  .clients-section {
+    padding: 80px 32px;
+  }
+  
+  .about-title {
+    font-size: 2.25rem;
+  }
+  
+  .projects-title {
+    font-size: 2.75rem;
+  }
+  
+  .testimonials-title {
+    font-size: 2.25rem;
+  }
+}
+
+/* Tablets */
 @media (max-width: 968px) {
+  .about-section {
+    padding: 70px 28px;
+  }
+  
+  .projects-section {
+    padding: 70px 28px;
+  }
+  
+  .testimonials-section {
+    padding: 70px 28px;
+  }
+  
+  .clients-section {
+    padding: 70px 28px;
+  }
+  
   .about-content {
     grid-template-columns: 1fr;
-    gap: 80px;
+    gap: 50px;
     text-align: center;
   }
 
   .project-card,
   .project-card-reverse {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 35px;
     min-height: auto;
   }
 
@@ -545,8 +597,20 @@
   }
 
   .project-image {
-    min-height: 300px;
-    height: 300px;
+    min-height: 350px;
+    height: 350px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .project-img {
+    min-height: 350px;
+    max-height: 350px;
+  }
+  
+  .optimized-image-container .project-img {
+    min-height: 350px;
+    max-height: 350px;
   }
 
   .testimonials-content {
@@ -558,36 +622,148 @@
     min-height: auto;
     margin-left: 0;
   }
-}
-
-@media (max-width: 768px) {
-  .nav-arrow {
-    width: 40px;
-    height: 40px;
-  }
-
-  .nav-arrow-left {
-    left: 16px;
-  }
-
-  .nav-arrow-right {
-    right: 16px;
-  }
-
+  
   .about-title {
     font-size: 2rem;
   }
+  
+  .projects-title {
+    font-size: 2.5rem;
+  }
+  
+  .project-name {
+    font-size: 2.25rem;
+  }
+  
+  .testimonials-title {
+    font-size: 2rem;
+  }
+  
+  .clients-title {
+    font-size: 2rem;
+  }
+  
+  /* Hide connecting lines on tablet */
+  .project-image::after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    padding: 60px 24px;
+  }
+  
+  .projects-section {
+    padding: 60px 24px;
+  }
+  
+  .testimonials-section {
+    padding: 60px 24px;
+  }
+  
+  .clients-section {
+    padding: 60px 24px;
+  }
+  
+  .nav-arrow {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-arrow-left {
+    left: 20px;
+  }
+
+  .nav-arrow-right {
+    right: 20px;
+  }
+  
+  .slide-indicators {
+    bottom: 28px;
+    gap: 10px;
+  }
+
+  .slide-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .about-content {
+    gap: 40px;
+  }
+  
+  .about-title {
+    font-size: 1.9rem;
+    margin-bottom: 24px;
+  }
+  
+  .about-description {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  
+  .projects-header {
+    margin-bottom: 50px;
+  }
+  
+  .projects-grid {
+    gap: 50px;
+  }
 
   .projects-title {
-    font-size: 2rem;
+    font-size: 2.1rem;
   }
 
   .project-name {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
+    margin-bottom: 24px;
+  }
+  
+  .project-image {
+    min-height: 280px;
+    height: 280px;
+    border-radius: 10px;
+  }
+  
+  .project-img {
+    min-height: 280px;
+    max-height: 280px;
+  }
+  
+  .optimized-image-container .project-img {
+    min-height: 280px;
+    max-height: 280px;
+  }
+  
+  .project-details {
+    padding: 18px;
+  }
+  
+  .project-read-btn {
+    font-size: 15px;
+    margin-top: 8px;
   }
 
   .testimonials-title {
-    font-size: 2rem;
+    font-size: 1.9rem;
+  }
+  
+  .testimonial-item {
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .testimonial-text {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  
+  .testimonial-author {
+    font-size: 14px;
   }
 
   .clients-carousel {
@@ -598,6 +774,227 @@
   .clients-grid {
     flex-direction: column;
     gap: 20px;
+  }
+  
+  .clients-title {
+    font-size: 1.9rem;
+  }
+  
+  .client-logo {
+    max-height: 50px;
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 50px 20px;
+  }
+  
+  .projects-section {
+    padding: 50px 20px;
+  }
+  
+  .testimonials-section {
+    padding: 50px 20px;
+  }
+  
+  .clients-section {
+    padding: 50px 20px;
+  }
+  
+  .nav-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .nav-arrow-left {
+    left: 16px;
+  }
+
+  .nav-arrow-right {
+    right: 16px;
+  }
+  
+  .slide-indicators {
+    bottom: 24px;
+    gap: 8px;
+  }
+
+  .slide-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .about-content {
+    gap: 35px;
+  }
+  
+  .cutout-image {
+    max-width: 280px;
+  }
+
+  .about-title {
+    font-size: 1.7rem;
+    margin-bottom: 20px;
+  }
+  
+  .about-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .projects-header {
+    margin-bottom: 40px;
+  }
+  
+  .projects-grid {
+    gap: 40px;
+  }
+
+  .projects-title {
+    font-size: 1.8rem;
+  }
+
+  .project-name {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .project-image {
+    min-height: 220px;
+    height: 220px;
+    border-radius: 8px;
+  }
+  
+  .project-img {
+    min-height: 220px;
+    max-height: 220px;
+  }
+  
+  .optimized-image-container .project-img {
+    min-height: 220px;
+    max-height: 220px;
+  }
+  
+  .project-details {
+    padding: 16px;
+  }
+  
+  .project-read-btn {
+    font-size: 14px;
+  }
+  
+  .project-year {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .testimonials-title {
+    font-size: 1.7rem;
+  }
+  
+  .testimonial-item {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .testimonial-text {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  
+  .testimonial-author {
+    font-size: 13px;
+  }
+  
+  .clients-title {
+    font-size: 1.7rem;
+  }
+  
+  .client-logo {
+    max-height: 45px;
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 360px) {
+  .about-section {
+    padding: 40px 16px;
+  }
+  
+  .projects-section {
+    padding: 40px 16px;
+  }
+  
+  .testimonials-section {
+    padding: 40px 16px;
+  }
+  
+  .clients-section {
+    padding: 40px 16px;
+  }
+  
+  .nav-arrow {
+    width: 34px;
+    height: 34px;
+  }
+  
+  .cutout-image {
+    max-width: 260px;
+  }
+
+  .about-title {
+    font-size: 1.5rem;
+  }
+
+  .projects-title {
+    font-size: 1.6rem;
+  }
+
+  .project-name {
+    font-size: 1.3rem;
+  }
+  
+  .project-image {
+    min-height: 200px;
+    height: 200px;
+  }
+  
+  .project-img {
+    min-height: 200px;
+    max-height: 200px;
+  }
+  
+  .optimized-image-container .project-img {
+    min-height: 200px;
+    max-height: 200px;
+  }
+
+  .testimonials-title {
+    font-size: 1.5rem;
+  }
+  
+  .testimonial-item {
+    padding: 18px;
+  }
+  
+  .testimonial-text {
+    font-size: 13px;
+  }
+  
+  .testimonial-author {
+    font-size: 12px;
+  }
+  
+  .clients-title {
+    font-size: 1.5rem;
+  }
+  
+  .client-logo {
+    max-height: 40px;
+    max-width: 90px;
   }
 }
 
