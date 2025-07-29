@@ -1391,6 +1391,23 @@
     font-size: 2rem;
   }
 
+  .testimonial-quote-container {
+    padding: 35px 25px;
+    min-height: auto;
+  }
+
+  .testimonial-quote {
+    font-size: 16px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .quote-mark {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
   .testimonial-name-btn {
     font-size: 14px;
     padding: 10px 20px;
@@ -1401,7 +1418,26 @@
   }
 
   .testimonial-quote-container {
-    padding: 30px 20px;
+    padding: 25px 15px;
+    min-height: auto;
+    max-height: none;
+  }
+
+  .testimonial-quote {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .testimonial-author {
+    font-size: 13px;
+  }
+
+  .quote-mark {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
   }
 
   .services-background {
