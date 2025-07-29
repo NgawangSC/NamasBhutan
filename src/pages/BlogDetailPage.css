@@ -4,6 +4,23 @@
   padding-top: 80px;
 }
 
+/* Target navigation header container elements */
+body:has(.blog-detail-page) .header > .header-container,
+body:has(.blog-detail-page) .header > .header-content {
+  background-color: black !important;
+  background: black;
+}
+
+/* Ensure blog detail content headers have NO background */
+.blog-detail-page .blog-detail-header,
+.blog-detail-page .blog-detail-article header,
+.blog-detail-page header:not(.header),
+.blog-detail-page .blog-meta,
+.blog-detail-page .blog-author-info {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .blog-detail-container {
   max-width: 800px;
   margin: 0 auto;
@@ -55,11 +72,13 @@
 }
 
 .blog-detail-article {
-  background: white;
+  background: transparent;
 }
 
 .blog-detail-header {
   margin-bottom: 40px;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .blog-meta {
