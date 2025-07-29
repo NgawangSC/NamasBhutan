@@ -4,12 +4,14 @@ import { useState, useMemo } from "react"
 import { useData } from "../contexts/DataContext"
 import { getImageUrl } from "../utils/imageUtils"
 import ViewFilter from "../components/ViewFilter"
+import BlogImageUpload from "../components/BlogImageUpload"
 import "./BlogsManager.css"
 
 const BlogsManager = () => {
   const { blogs, addBlog, updateBlog, deleteBlog } = useData()
   const [showForm, setShowForm] = useState(false)
   const [editingBlog, setEditingBlog] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null)
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState("")
@@ -64,6 +66,23 @@ const BlogsManager = () => {
     }))
   }
 
+  const handleImageChange = (file) => {
+    setSelectedImage(file)
+    if (file) {
+      // Create a temporary URL for the image to store in formData
+      const imageUrl = URL.createObjectURL(file)
+      setFormData((prev) => ({
+        ...prev,
+        image: imageUrl,
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        image: "",
+      }))
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -73,6 +92,13 @@ const BlogsManager = () => {
         .split(",")
         .map((tag) => tag.trim())
         .filter((tag) => tag),
+    }
+
+    // If there's a selected image file, use it instead of the URL
+    if (selectedImage) {
+      // In a real application, you would upload the file to a server here
+      // For now, we'll create a blob URL
+      blogData.image = URL.createObjectURL(selectedImage)
     }
 
     if (editingBlog) {
@@ -95,6 +121,7 @@ const BlogsManager = () => {
       status: "draft",
       image: "",
     })
+    setSelectedImage(null)
     setShowForm(false)
     setEditingBlog(null)
   }
@@ -105,6 +132,7 @@ const BlogsManager = () => {
       tags: blog.tags ? blog.tags.join(", ") : "",
     })
     setEditingBlog(blog)
+    setSelectedImage(null) // Reset selected image when editing
     setShowForm(true)
   }
 
@@ -260,13 +288,10 @@ const BlogsManager = () => {
               </div>
 
               <div className="form-group">
-                <label>Featured Image URL</label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleInputChange}
-                  placeholder="https://example.com/image.jpg"
+                <BlogImageUpload
+                  selectedImage={selectedImage}
+                  onImageChange={handleImageChange}
+                  existingImageUrl={editingBlog ? formData.image : null}
                 />
               </div>
 
