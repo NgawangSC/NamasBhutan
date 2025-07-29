@@ -4,6 +4,22 @@
   padding-top: 80px;
 }
 
+/* Force header to be black on blog detail page */
+.blog-detail-page header,
+.blog-detail-page .header,
+.blog-detail-page .header-transparent,
+.blog-detail-page .header-scrolled {
+  background-color: #000 !important;
+  background: #000 !important;
+}
+
+/* Additional selectors for any other header variations */
+.blog-detail-page .navbar,
+.blog-detail-page .navigation {
+  background-color: #000 !important;
+  background: #000 !important;
+}
+
 .blog-detail-container {
   max-width: 800px;
   margin: 0 auto;
