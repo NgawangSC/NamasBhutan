@@ -29,6 +29,16 @@ body:has(.blog-detail-page) .header > .header-content {
   background: transparent !important;
 }
 
+/* Ensure blog detail content headers have NO background */
+.blog-detail-page .blog-detail-header,
+.blog-detail-page .blog-detail-article header,
+.blog-detail-page header:not(.header),
+.blog-detail-page .blog-meta,
+.blog-detail-page .blog-author-info {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 .blog-detail-container {
   max-width: 800px;
   margin: 0 auto;
@@ -80,11 +90,13 @@ body:has(.blog-detail-page) .header > .header-content {
 }
 
 .blog-detail-article {
-  background: white;
+  background: transparent;
 }
 
 .blog-detail-header {
   margin-bottom: 40px;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .blog-meta {
