@@ -424,6 +424,123 @@
   border-left: 4px solid white;
 }
 
+/* Tablet Responsive - 1024px and below */
+@media (max-width: 1024px) {
+  .nav-desktop {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .settings-btn {
+    display: none;
+  }
+
+  /* Center mobile menu items for tablet */
+  .nav-mobile {
+    align-items: center;
+    text-align: center;
+  }
+
+  .nav-mobile-link {
+    text-align: center;
+    padding: 12px 0;
+    margin: 0 auto;
+    max-width: 300px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-mobile-link.active {
+    border-left: none;
+    border-bottom: 2px solid white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Center design section for tablet */
+  .mobile-design-section {
+    border-left: none;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .design-header {
+    text-align: center;
+    padding: 8px 0;
+    margin: 0 auto;
+    max-width: 300px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .design-sub-item {
+    padding-left: 0;
+    text-align: center;
+    border-left: none;
+    border-bottom: 1px solid transparent;
+    margin: 0 auto;
+    max-width: 280px;
+  }
+
+  .design-sub-item:hover {
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Center build section for tablet */
+  .mobile-build-section {
+    border-left: none;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .build-header {
+    text-align: center;
+    padding: 8px 0;
+    margin: 0 auto;
+    max-width: 300px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .build-sub-item {
+    padding-left: 0;
+    text-align: center;
+    border-left: none;
+    border-bottom: 1px solid transparent;
+    margin: 0 auto;
+    max-width: 280px;
+  }
+
+  .build-sub-item:hover {
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Center construction subsection for tablet */
+  .mobile-construction-subsection {
+    border-left: none;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .construction-sub-item {
+    padding-left: 0;
+    text-align: center;
+    border-left: none;
+    border-bottom: 1px solid transparent;
+    margin: 0 auto;
+    max-width: 260px;
+    font-size: 13px;
+  }
+
+  .construction-sub-item:hover {
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* Mobile Responsive - 768px and below */
 @media (max-width: 768px) {
   .header-container {
     padding: 0 24px;
@@ -444,5 +561,109 @@
   .logo-image {
     height: 50px;
     max-width: 100px;
+  }
+
+  /* Center mobile menu items for mobile */
+  .nav-mobile {
+    align-items: center;
+    text-align: center;
+  }
+
+  .nav-mobile-link {
+    text-align: center;
+    padding: 14px 0;
+    margin: 0 auto;
+    max-width: 280px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-mobile-link.active {
+    border-left: none;
+    border-bottom: 2px solid white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Center design section for mobile */
+  .mobile-design-section {
+    border-left: none;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .design-header {
+    text-align: center;
+    padding: 10px 0;
+    margin: 0 auto;
+    max-width: 280px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .design-sub-item {
+    padding-left: 0;
+    text-align: center;
+    border-left: none;
+    border-bottom: 1px solid transparent;
+    margin: 0 auto;
+    max-width: 260px;
+    padding: 12px 0;
+  }
+
+  .design-sub-item:hover {
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Center build section for mobile */
+  .mobile-build-section {
+    border-left: none;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .build-header {
+    text-align: center;
+    padding: 10px 0;
+    margin: 0 auto;
+    max-width: 280px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .build-sub-item {
+    padding-left: 0;
+    text-align: center;
+    border-left: none;
+    border-bottom: 1px solid transparent;
+    margin: 0 auto;
+    max-width: 260px;
+    padding: 12px 0;
+  }
+
+  .build-sub-item:hover {
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Center construction subsection for mobile */
+  .mobile-construction-subsection {
+    border-left: none;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .construction-sub-item {
+    padding-left: 0;
+    text-align: center;
+    border-left: none;
+    border-bottom: 1px solid transparent;
+    margin: 0 auto;
+    max-width: 240px;
+    padding: 10px 0;
+    font-size: 13px;
+  }
+
+  .construction-sub-item:hover {
+    border-left: none;
+    border-bottom-color: rgba(255, 255, 255, 0.4);
   }
 }
