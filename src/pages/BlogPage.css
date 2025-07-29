@@ -3,21 +3,19 @@
 }
 
 /* Force header to be black on blog page */
-.blog-page header {
+.blog-page header,
+.blog-page .header,
+.blog-page .header-transparent,
+.blog-page .header-scrolled {
   background-color: #000 !important;
+  background: #000 !important;
 }
 
-/* If your header has a specific class, add these too */
-.blog-page .header {
-  background-color: #000 !important;
-}
-
-.blog-page .navbar {
-  background-color: #000 !important;
-}
-
+/* Additional selectors for any other header variations */
+.blog-page .navbar,
 .blog-page .navigation {
   background-color: #000 !important;
+  background: #000 !important;
 }
 
 /* Hero Banner */
