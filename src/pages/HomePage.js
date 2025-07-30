@@ -57,7 +57,54 @@ function HomePage() {
 
   const [currentClientSlide, setCurrentClientSlide] = useState(0)
 
-  const totalClientSlides = Math.max(1, Math.ceil(clients.length / 3))
+  // Responsive clients per slide
+  const [clientsPerSlide, setClientsPerSlide] = useState(3);
+  
+  useEffect(() => {
+    const updateClientsPerSlide = () => {
+      if (window.innerWidth <= 768) {
+        setClientsPerSlide(1); // Single client on mobile
+      } else if (window.innerWidth <= 968) {
+        setClientsPerSlide(2); // Two clients on tablet
+      } else {
+        setClientsPerSlide(3); // Three clients on desktop
+      }
+    };
+
+    updateClientsPerSlide();
+    window.addEventListener('resize', updateClientsPerSlide);
+    return () => window.removeEventListener('resize', updateClientsPerSlide);
+  }, []);
+
+  const totalClientSlides = Math.max(1, Math.ceil(clients.length / clientsPerSlide))
+
+  // Touch/swipe functionality for clients
+  const [clientTouchStart, setClientTouchStart] = useState(null);
+  const [clientTouchEnd, setClientTouchEnd] = useState(null);
+
+  const handleClientTouchStart = (e) => {
+    setClientTouchEnd(null);
+    setClientTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleClientTouchMove = (e) => {
+    setClientTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleClientTouchEnd = () => {
+    if (!clientTouchStart || !clientTouchEnd) return;
+    
+    const distance = clientTouchStart - clientTouchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextClientSlide();
+    }
+    if (isRightSwipe) {
+      prevClientSlide();
+    }
+  };
 
   // Fetch data on component mount
   useEffect(() => {
@@ -321,7 +368,12 @@ function HomePage() {
           <div className="clients-header">
             <img src="/images/people-clients.png" alt="People Clients" className="clients-title-image" />
           </div>
-          <div className="clients-carousel">
+          <div 
+            className="clients-carousel"
+            onTouchStart={handleClientTouchStart}
+            onTouchMove={handleClientTouchMove}
+            onTouchEnd={handleClientTouchEnd}
+          >
             {loading.clients ? (
               <div className="clients-loading">
                 <p>Loading clients...</p>
@@ -333,7 +385,7 @@ function HomePage() {
                 </button>
                 <div className="clients-grid">
                   {clients
-                    .slice(currentClientSlide * 3, (currentClientSlide + 1) * 3)
+                    .slice(currentClientSlide * clientsPerSlide, (currentClientSlide + 1) * clientsPerSlide)
                     .map((client) => (
                       <div key={client.id} className="client-card">
                         <div className="client-logo">
@@ -352,6 +404,34 @@ function HomePage() {
                 <button onClick={nextClientSlide} className="clients-arrow clients-arrow-right">
                   <ChevronRight size={24} />
                 </button>
+                
+                {/* Mobile Navigation for Clients */}
+                <div className="clients-mobile-nav">
+                  <button 
+                    className="client-nav-btn prev" 
+                    onClick={prevClientSlide}
+                    aria-label="Previous clients"
+                  >
+                    ‹
+                  </button>
+                  <div className="clients-dots">
+                    {Array.from({ length: totalClientSlides }, (_, index) => (
+                      <button
+                        key={index}
+                        className={`client-dot ${index === currentClientSlide ? 'active' : ''}`}
+                        onClick={() => setCurrentClientSlide(index)}
+                        aria-label={`Go to client slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <button 
+                    className="client-nav-btn next" 
+                    onClick={nextClientSlide}
+                    aria-label="Next clients"
+                  >
+                    ›
+                  </button>
+                </div>
               </>
             ) : (
               <div className="no-clients">
