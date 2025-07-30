@@ -1,4 +1,3 @@
-"use client"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import "./DashboardLayout.css"
 
