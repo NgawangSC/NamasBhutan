@@ -58,6 +58,7 @@ const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json')
 const BLOGS_FILE = path.join(DATA_DIR, 'blogs.json')
 const CLIENTS_FILE = path.join(DATA_DIR, 'clients.json')
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json')
+const TEAM_MEMBERS_FILE = path.join(DATA_DIR, 'team-members.json')
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -106,6 +107,7 @@ let blogPosts = loadData(BLOGS_FILE, [
 ])
 let clients = loadData(CLIENTS_FILE, [])
 let contacts = loadData(CONTACTS_FILE, [])
+let teamMembers = loadData(TEAM_MEMBERS_FILE, [])
 
 // ROOT ROUTE - Fix for "Cannot GET /"
 app.get("/", (req, res) => {
@@ -142,6 +144,10 @@ app.get("/api", (req, res) => {
       "POST /api/contact - Submit contact form",
       "GET /api/contacts - Get all contacts",
       "PUT /api/contacts/:id - Update contact status",
+      "GET /api/team-members - Get all team members",
+      "POST /api/team-members - Create new team member",
+      "PUT /api/team-members/:id - Update team member",
+      "DELETE /api/team-members/:id - Delete team member",
       "POST /api/search - Search projects and blogs",
       "POST /api/backup - Create manual backup",
     ],
@@ -149,7 +155,8 @@ app.get("/api", (req, res) => {
       projects: projects.length,
       blogs: blogPosts.length,
       clients: clients.length,
-      contacts: contacts.length
+      contacts: contacts.length,
+      teamMembers: teamMembers.length
     }
   })
 })
@@ -794,6 +801,143 @@ app.put("/api/contacts/:id", (req, res) => {
       success: false,
       error: "Failed to update contact",
       details: error.message,
+    })
+  }
+})
+
+// TEAM MEMBER ROUTES
+
+// GET all team members
+app.get("/api/team-members", (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: teamMembers,
+      total: teamMembers.length
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch team members",
+      details: error.message
+    })
+  }
+})
+
+// POST create new team member
+app.post("/api/team-members", upload.single('image'), (req, res) => {
+  try {
+    const { name, title, position } = req.body
+
+    console.log('Received team member data:', { name, title, position });
+    console.log('Received file:', req.file);
+
+    if (!name || !title || !position) {
+      return res.status(400).json({
+        success: false,
+        error: "Name, title, and position are required"
+      })
+    }
+
+    const newId = Math.max(...teamMembers.map(m => m.id || 0), 0) + 1
+    
+    const newTeamMember = {
+      id: newId,
+      name,
+      title,
+      position,
+      image: req.file ? `/uploads/${req.file.filename}` : null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+
+    console.log('Created team member:', newTeamMember);
+
+    teamMembers.push(newTeamMember)
+    saveData(TEAM_MEMBERS_FILE, teamMembers)
+
+    res.status(201).json({
+      success: true,
+      data: newTeamMember,
+      message: "Team member created successfully"
+    })
+  } catch (error) {
+    console.error('Error creating team member:', error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to create team member",
+      details: error.message
+    })
+  }
+})
+
+// PUT update team member
+app.put("/api/team-members/:id", upload.single('image'), (req, res) => {
+  try {
+    const memberId = Number.parseInt(req.params.id)
+    const memberIndex = teamMembers.findIndex(m => m.id === memberId)
+
+    if (memberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Team member not found"
+      })
+    }
+
+    const { name, title, position } = req.body
+    const updatedMember = {
+      ...teamMembers[memberIndex],
+      name: name || teamMembers[memberIndex].name,
+      title: title || teamMembers[memberIndex].title,
+      position: position || teamMembers[memberIndex].position,
+      image: req.file ? `/uploads/${req.file.filename}` : teamMembers[memberIndex].image,
+      updatedAt: new Date().toISOString()
+    }
+
+    teamMembers[memberIndex] = updatedMember
+    saveData(TEAM_MEMBERS_FILE, teamMembers)
+
+    res.json({
+      success: true,
+      data: updatedMember,
+      message: "Team member updated successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to update team member",
+      details: error.message
+    })
+  }
+})
+
+// DELETE team member
+app.delete("/api/team-members/:id", (req, res) => {
+  try {
+    const memberId = Number.parseInt(req.params.id)
+    const memberIndex = teamMembers.findIndex(m => m.id === memberId)
+
+    if (memberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Team member not found"
+      })
+    }
+
+    const deletedMember = teamMembers[memberIndex]
+    teamMembers.splice(memberIndex, 1)
+    saveData(TEAM_MEMBERS_FILE, teamMembers)
+
+    res.json({
+      success: true,
+      data: deletedMember,
+      message: "Team member deleted successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to delete team member",
+      details: error.message
     })
   }
 })
