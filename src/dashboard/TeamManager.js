@@ -2,6 +2,41 @@ import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 import './TeamManager.css';
 
+// Component for handling image loading
+const TeamMemberImage = ({ src, alt, onImageLoad }) => {
+  const [imageSrc, setImageSrc] = useState('/images/founder-pic.png');
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    if (src && src !== '/images/founder-pic.png') {
+      const img = new Image();
+      img.onload = () => {
+        setImageSrc(src);
+        setImageLoaded(true);
+        if (onImageLoad) onImageLoad();
+      };
+      img.onerror = () => {
+        setImageSrc('/images/founder-pic.png');
+        setImageLoaded(true);
+      };
+      img.src = src;
+    } else {
+      setImageLoaded(true);
+    }
+  }, [src, onImageLoad]);
+
+  return (
+    <img 
+      src={imageSrc}
+      alt={alt}
+      style={{ 
+        opacity: imageLoaded ? '1' : '0.7',
+        transition: 'opacity 0.3s ease'
+      }}
+    />
+  );
+};
+
 const TeamManager = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [formData, setFormData] = useState({
@@ -202,12 +237,9 @@ const TeamManager = () => {
             {teamMembers.map((member) => (
               <div key={member.id} className="team-member-card">
                 <div className="team-member-image">
-                  <img 
-                    src={member.image || '/images/default-avatar.png'} 
+                  <TeamMemberImage 
+                    src={member.image}
                     alt={member.name}
-                    onError={(e) => {
-                      e.target.src = '/images/default-avatar.png';
-                    }}
                   />
                 </div>
                 <div className="team-member-info">

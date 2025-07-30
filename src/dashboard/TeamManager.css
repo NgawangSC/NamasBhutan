@@ -155,40 +155,44 @@
   font-size: 1.1rem;
 }
 
-/* 3-card grid layout */
+/* 3-card grid layout - match About Us page */
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+  gap: 30px;
   margin-top: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .team-member-card {
   background: #000000;
-  border-radius: 8px;
   padding: 20px;
   text-align: center;
   color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #333;
+  transition: transform 0.3s ease;
+  border: none;
+  border-radius: 0;
 }
 
 .team-member-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .team-member-image {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .team-member-image img {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 0;
   filter: grayscale(100%);
   transition: filter 0.3s ease;
+  display: block;
+  margin: 0 auto;
 }
 
 .team-member-image:hover img {
@@ -200,16 +204,16 @@
 }
 
 .team-member-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0 0 5px 0;
   color: white;
 }
 
 .team-member-title {
   font-size: 0.9rem;
-  font-weight: 400;
-  margin: 0 0 5px 0;
+  font-weight: 300;
+  margin: 0 0 3px 0;
   color: #adb5bd;
 }
 
@@ -286,8 +290,8 @@
   }
   
   .team-member-image img {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
 }
 
@@ -295,6 +299,11 @@
   .team-grid {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+  
+  .team-member-image img {
+    width: 120px;
+    height: 120px;
   }
   
   .team-manager {
