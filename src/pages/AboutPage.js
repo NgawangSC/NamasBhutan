@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useData } from "../contexts/DataContext"
+import API from "../services/api"
 import "./AboutPage.css"
 
 // Custom hook for counter animation
@@ -57,16 +58,33 @@ const AnimatedCounter = ({ end, suffix = "", startAnimation, formatLargeNumbers 
 function AboutPage() {
   const [selectedTestimonial, setSelectedTestimonial] = useState(0)
   const [startCounters, setStartCounters] = useState(false)
+  const [teamMembers, setTeamMembers] = useState([])
+  const [teamLoading, setTeamLoading] = useState(false)
   const statisticsRef = useRef(null)
   const navigate = useNavigate()
   
   // Get data from context
   const { data, loading, fetchProjects, fetchClients } = useData()
   
+  // Fetch team members
+  const fetchTeamMembers = async () => {
+    try {
+      setTeamLoading(true)
+      const response = await API.getTeamMembers()
+      setTeamMembers(response.data || [])
+    } catch (error) {
+      console.error('Error fetching team members:', error)
+      setTeamMembers([])
+    } finally {
+      setTeamLoading(false)
+    }
+  }
+  
   // Fetch data on component mount
   useEffect(() => {
     fetchProjects()
     fetchClients()
+    fetchTeamMembers()
   }, [fetchProjects, fetchClients])
   
 
@@ -368,96 +386,34 @@ function AboutPage() {
             <h3>Experts ready to serve</h3>
           </div>
           <div className="team-grid">
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
+            {teamLoading ? (
+              <div className="team-loading">
+                <p>Loading team members...</p>
               </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
+            ) : teamMembers.length > 0 ? (
+              teamMembers.map((member) => (
+                <div key={member.id} className="team-member-card">
+                  <div className="team-member-image">
+                    <img 
+                      src={member.image || '/images/default-avatar.png'} 
+                      alt={member.name}
+                      onError={(e) => {
+                        e.target.src = '/images/founder-pic.png';
+                      }}
+                    />
+                  </div>
+                  <div className="team-member-info">
+                    <h4 className="team-member-name">{member.name}</h4>
+                    <p className="team-member-title">{member.title}</p>
+                    <p className="team-member-position">{member.position}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-team-members">
+                <p>No team members found.</p>
               </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

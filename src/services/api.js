@@ -265,6 +265,85 @@ class ApiService {
       method: 'DELETE',
     });
   }
+
+  // Team Member methods
+  static async getTeamMembers() {
+    return this.request('/team-members');
+  }
+
+  static async createTeamMember(teamMemberData) {
+    const { image, ...data } = teamMemberData;
+    
+    if (image) {
+      // Use FormData for file upload
+      const formData = new FormData();
+      
+      // Append team member data
+      Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+      });
+      
+      // Append image file
+      formData.append('image', image);
+      
+      return this.requestMultipart('/team-members', formData);
+    } else {
+      // Use JSON for text-only data
+      return this.request('/team-members', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    }
+  }
+
+  static async updateTeamMember(id, teamMemberData) {
+    const { image, ...data } = teamMemberData;
+    
+    if (image) {
+      // Use FormData for file upload
+      const formData = new FormData();
+      
+      // Append team member data
+      Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+      });
+      
+      // Append image file
+      formData.append('image', image);
+      
+      const url = `${API_BASE_URL}/team-members/${id}`;
+      
+      try {
+        const response = await fetch(url, {
+          method: 'PUT',
+          body: formData,
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || `HTTP error! status: ${response.status}`);
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+      }
+    } else {
+      // Use JSON for text-only data
+      return this.request(`/team-members/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    }
+  }
+
+  static async deleteTeamMember(id) {
+    return this.request(`/team-members/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export default ApiService;

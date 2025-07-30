@@ -455,6 +455,25 @@
   color: #adb5bd;
 }
 
+.team-loading,
+.no-team-members {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.team-loading {
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.no-team-members {
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
 /* About Section */
 .about-section {
   padding: 100px 0;
