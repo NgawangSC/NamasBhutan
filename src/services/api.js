@@ -1,6 +1,13 @@
 const API_BASE_URL = 'http://localhost:5000/api';
+const SERVER_BASE_URL = 'http://localhost:5000';
 
 class ApiService {
+  // Helper method to construct full image URLs
+  static getImageUrl(imagePath) {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${SERVER_BASE_URL}${imagePath}`;
+  }
   // Helper method for making HTTP requests
   static async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;

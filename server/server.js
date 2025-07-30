@@ -829,6 +829,9 @@ app.post("/api/team-members", upload.single('image'), (req, res) => {
   try {
     const { name, title, position } = req.body
 
+    console.log('Received team member data:', { name, title, position });
+    console.log('Received file:', req.file);
+
     if (!name || !title || !position) {
       return res.status(400).json({
         success: false,
@@ -848,6 +851,8 @@ app.post("/api/team-members", upload.single('image'), (req, res) => {
       updatedAt: new Date().toISOString()
     }
 
+    console.log('Created team member:', newTeamMember);
+
     teamMembers.push(newTeamMember)
     saveData(TEAM_MEMBERS_FILE, teamMembers)
 
@@ -857,6 +862,7 @@ app.post("/api/team-members", upload.single('image'), (req, res) => {
       message: "Team member created successfully"
     })
   } catch (error) {
+    console.error('Error creating team member:', error);
     res.status(500).json({
       success: false,
       error: "Failed to create team member",

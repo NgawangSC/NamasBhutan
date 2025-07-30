@@ -395,7 +395,7 @@ function AboutPage() {
                 <div key={member.id} className="team-member-card">
                   <div className="team-member-image">
                     <img 
-                      src={member.image || '/images/default-avatar.png'} 
+                      src={API.getImageUrl(member.image) || '/images/founder-pic.png'} 
                       alt={member.name}
                       onError={(e) => {
                         e.target.src = '/images/founder-pic.png';

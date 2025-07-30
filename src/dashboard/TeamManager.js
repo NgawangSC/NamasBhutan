@@ -8,14 +8,17 @@ const TeamMemberImage = ({ src, alt, onImageLoad }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
+    console.log('TeamMemberImage src:', src);
     if (src && src !== '/images/founder-pic.png') {
       const img = new Image();
       img.onload = () => {
+        console.log('Image loaded successfully:', src);
         setImageSrc(src);
         setImageLoaded(true);
         if (onImageLoad) onImageLoad();
       };
       img.onerror = () => {
+        console.log('Image failed to load:', src);
         setImageSrc('/images/founder-pic.png');
         setImageLoaded(true);
       };
@@ -93,19 +96,24 @@ const TeamManager = () => {
     try {
       setLoading(true);
       
+      console.log('Submitting form data:', formData);
+      
+      let response;
       if (editingMember) {
-        await API.updateTeamMember(editingMember.id, formData);
+        response = await API.updateTeamMember(editingMember.id, formData);
         setMessage('Team member updated successfully');
       } else {
-        await API.createTeamMember(formData);
+        response = await API.createTeamMember(formData);
         setMessage('Team member created successfully');
       }
+      
+      console.log('API response:', response);
       
       resetForm();
       fetchTeamMembers();
     } catch (error) {
       console.error('Error saving team member:', error);
-      setMessage('Error saving team member');
+      setMessage(`Error saving team member: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -238,7 +246,7 @@ const TeamManager = () => {
               <div key={member.id} className="team-member-card">
                 <div className="team-member-image">
                   <TeamMemberImage 
-                    src={member.image}
+                    src={API.getImageUrl(member.image)}
                     alt={member.name}
                   />
                 </div>
