@@ -131,9 +131,9 @@ class ApiService {
   static async createTeamMember(teamMemberData) {
     const formData = new FormData();
     
-    // Append team member data
+    // Append team member data (excluding linkedin and image)
     Object.keys(teamMemberData).forEach(key => {
-      if (key !== 'image') {
+      if (key !== 'image' && key !== 'linkedin') {
         formData.append(key, teamMemberData[key]);
       }
     });
@@ -149,9 +149,9 @@ class ApiService {
   static async updateTeamMember(id, teamMemberData) {
     const formData = new FormData();
     
-    // Append team member data
+    // Append team member data (excluding linkedin and image)
     Object.keys(teamMemberData).forEach(key => {
-      if (key !== 'image') {
+      if (key !== 'image' && key !== 'linkedin') {
         formData.append(key, teamMemberData[key]);
       }
     });

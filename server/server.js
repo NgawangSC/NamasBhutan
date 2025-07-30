@@ -117,7 +117,6 @@ let teamMembers = loadData(TEAM_FILE, [
     image: "/images/founder-pic.png",
     email: "sonam@namasarchitecture.com",
     phone: "+975-12345678",
-    linkedin: "",
     status: "Active",
     createdAt: new Date().toISOString(),
   }
@@ -1004,7 +1003,7 @@ app.get("/api/team/:id", (req, res) => {
 // POST create new team member
 app.post("/api/team", upload.single("image"), (req, res) => {
   try {
-    const { name, title, position, bio, email, phone, linkedin, status } = req.body
+    const { name, title, position, bio, email, phone, status } = req.body
 
     // Validation
     if (!name) {
@@ -1022,7 +1021,6 @@ app.post("/api/team", upload.single("image"), (req, res) => {
       bio: bio || "",
       email: email || "",
       phone: phone || "",
-      linkedin: linkedin || "",
       status: status || "Active",
       image: req.file ? `/uploads/${req.file.filename}` : "/images/placeholder-avatar.png",
       createdAt: new Date().toISOString(),

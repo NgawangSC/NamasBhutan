@@ -16,7 +16,6 @@ const TeamManager = () => {
     bio: "",
     email: "",
     phone: "",
-    linkedin: "",
     status: "Active",
     image: null,
   })
@@ -60,7 +59,6 @@ const TeamManager = () => {
       bio: "",
       email: "",
       phone: "",
-      linkedin: "",
       status: "Active",
       image: null,
     })
@@ -77,7 +75,6 @@ const TeamManager = () => {
       bio: teamMember.bio || "",
       email: teamMember.email || "",
       phone: teamMember.phone || "",
-      linkedin: teamMember.linkedin || "",
       status: teamMember.status || "Active",
       image: null, // Reset file input for editing
     })
@@ -186,17 +183,7 @@ const TeamManager = () => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="linkedin">LinkedIn</label>
-                  <input
-                    type="url"
-                    id="linkedin"
-                    name="linkedin"
-                    value={formData.linkedin}
-                    onChange={handleInputChange}
-                    placeholder="https://linkedin.com/in/username"
-                  />
-                </div>
+
 
                 <div className="form-group">
                   <label htmlFor="status">Status</label>
@@ -268,41 +255,11 @@ const TeamManager = () => {
                 />
               </div>
               
-              <div className="team-info">
-                <h3 className="team-name">{teamMember.name}</h3>
-                {teamMember.title && <p className="team-title">{teamMember.title}</p>}
-                {teamMember.position && <p className="team-position">{teamMember.position}</p>}
-                {teamMember.bio && (
-                  <p className="team-bio">{teamMember.bio.substring(0, 100)}
-                    {teamMember.bio.length > 100 ? "..." : ""}
-                  </p>
-                )}
-                
-                <div className="team-contact">
-                  {teamMember.email && (
-                    <span className="contact-item">📧 {teamMember.email}</span>
-                  )}
-                  {teamMember.phone && (
-                    <span className="contact-item">📞 {teamMember.phone}</span>
-                  )}
-                  {teamMember.linkedin && (
-                    <span className="contact-item">
-                      <a href={teamMember.linkedin} target="_blank" rel="noopener noreferrer">
-                        🔗 LinkedIn
-                      </a>
-                    </span>
-                  )}
+                              <div className="team-info">
+                  <h3 className="team-name">{teamMember.name}</h3>
+                  {teamMember.title && <p className="team-title">{teamMember.title}</p>}
+                  {teamMember.position && <p className="team-position">{teamMember.position}</p>}
                 </div>
-
-                <div className="team-meta">
-                  <span className={`status ${teamMember.status?.toLowerCase()}`}>
-                    {teamMember.status || "Active"}
-                  </span>
-                  <span className="date">
-                    Added: {new Date(teamMember.createdAt || Date.now()).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
 
               <div className="team-actions">
                 <button 
