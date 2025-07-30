@@ -57,6 +57,48 @@ function HomePage() {
 
   const [currentClientSlide, setCurrentClientSlide] = useState(0)
 
+  // Projects slider state
+  const [currentProjectSlide, setCurrentProjectSlide] = useState(0);
+  const [projectTouchStart, setProjectTouchStart] = useState(null);
+  const [projectTouchEnd, setProjectTouchEnd] = useState(null);
+
+  // Touch/swipe functionality for projects
+  const handleProjectTouchStart = (e) => {
+    setProjectTouchEnd(null);
+    setProjectTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleProjectTouchMove = (e) => {
+    setProjectTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleProjectTouchEnd = () => {
+    if (!projectTouchStart || !projectTouchEnd) return;
+    
+    const distance = projectTouchStart - projectTouchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && currentProjectSlide < recentProjects.length - 1) {
+      setCurrentProjectSlide(currentProjectSlide + 1);
+    }
+    if (isRightSwipe && currentProjectSlide > 0) {
+      setCurrentProjectSlide(currentProjectSlide - 1);
+    }
+  };
+
+  const nextProjectSlide = () => {
+    setCurrentProjectSlide((prev) => 
+      prev === recentProjects.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevProjectSlide = () => {
+    setCurrentProjectSlide((prev) => 
+      prev === 0 ? recentProjects.length - 1 : prev - 1
+    );
+  };
+
   // Responsive clients per slide
   const [clientsPerSlide, setClientsPerSlide] = useState(3);
   
@@ -244,54 +286,114 @@ function HomePage() {
             <div className="projects-label">LAST PROJECTS</div>
             <h2 className="projects-title">Make it with passion.</h2>
           </div>
-          <div className="projects-grid">
+          <div 
+            className="projects-grid"
+            onTouchStart={handleProjectTouchStart}
+            onTouchMove={handleProjectTouchMove}
+            onTouchEnd={handleProjectTouchEnd}
+          >
             {loading.projects ? (
               <div className="projects-loading">
                 <p>Loading projects...</p>
               </div>
             ) : recentProjects.length > 0 ? (
-              recentProjects.map((project, index) => (
-                <div 
-                  key={project.id} 
-                  className={`project-card ${index % 2 === 1 ? "project-card-reverse" : ""}`}
-                >
-                  {index % 2 === 0 ? (
-                    <>
+              <>
+                {/* Desktop view - show all projects */}
+                <div className="projects-desktop-view">
+                  {recentProjects.map((project, index) => (
+                    <div 
+                      key={project.id} 
+                      className={`project-card ${index % 2 === 1 ? "project-card-reverse" : ""}`}
+                    >
+                      {index % 2 === 0 ? (
+                        <>
+                          <div className="project-image">
+                            <img 
+                              src={getImageUrl(project.image) || "/images/placeholder.png"} 
+                              alt={project.alt || project.name} 
+                              className="project-img" 
+                            />
+                          </div>
+                          <div className="project-details">
+                            <div className="project-year">{project.year}</div>
+                            <h3 className="project-name">{project.name}</h3>
+                            <button className="project-read-btn" onClick={() => handleReadMore(project.id)}>
+                              Read <ChevronRight size={16} />
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="project-details">
+                            <div className="project-year">{project.year}</div>
+                            <h3 className="project-name">{project.name}</h3>
+                            <button className="project-read-btn" onClick={() => handleReadMore(project.id)}>
+                              Read <ChevronRight size={16} />
+                            </button>
+                          </div>
+                          <div className="project-image">
+                            <img 
+                              src={getImageUrl(project.image) || "/images/placeholder.png"} 
+                              alt={project.alt || project.name} 
+                              className="project-img" 
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Mobile view - show one project at a time */}
+                <div className="projects-mobile-view">
+                  {recentProjects.length > 0 && (
+                    <div className="project-card mobile-project-card">
                       <div className="project-image">
                         <img 
-                          src={getImageUrl(project.image) || "/images/placeholder.png"} 
-                          alt={project.alt || project.name} 
+                          src={getImageUrl(recentProjects[currentProjectSlide].image) || "/images/placeholder.png"} 
+                          alt={recentProjects[currentProjectSlide].alt || recentProjects[currentProjectSlide].name} 
                           className="project-img" 
                         />
                       </div>
                       <div className="project-details">
-                        <div className="project-year">{project.year}</div>
-                        <h3 className="project-name">{project.name}</h3>
-                        <button className="project-read-btn" onClick={() => handleReadMore(project.id)}>
+                        <div className="project-year">{recentProjects[currentProjectSlide].year}</div>
+                        <h3 className="project-name">{recentProjects[currentProjectSlide].name}</h3>
+                        <button className="project-read-btn" onClick={() => handleReadMore(recentProjects[currentProjectSlide].id)}>
                           Read <ChevronRight size={16} />
                         </button>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="project-details">
-                        <div className="project-year">{project.year}</div>
-                        <h3 className="project-name">{project.name}</h3>
-                        <button className="project-read-btn" onClick={() => handleReadMore(project.id)}>
-                          Read <ChevronRight size={16} />
-                        </button>
-                      </div>
-                      <div className="project-image">
-                        <img 
-                          src={getImageUrl(project.image) || "/images/placeholder.png"} 
-                          alt={project.alt || project.name} 
-                          className="project-img" 
-                        />
-                      </div>
-                    </>
+                    </div>
                   )}
                 </div>
-              ))
+
+                {/* Mobile Navigation for Projects */}
+                <div className="projects-mobile-nav">
+                  <button 
+                    className="project-nav-btn prev" 
+                    onClick={prevProjectSlide}
+                    aria-label="Previous project"
+                  >
+                    ‹
+                  </button>
+                  <div className="projects-dots">
+                    {recentProjects.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`project-dot ${index === currentProjectSlide ? 'active' : ''}`}
+                        onClick={() => setCurrentProjectSlide(index)}
+                        aria-label={`Go to project ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <button 
+                    className="project-nav-btn next" 
+                    onClick={nextProjectSlide}
+                    aria-label="Next project"
+                  >
+                    ›
+                  </button>
+                </div>
+              </>
             ) : (
               <div className="no-projects">
                 <p>No projects available. Add some projects in the dashboard to see them here!</p>
