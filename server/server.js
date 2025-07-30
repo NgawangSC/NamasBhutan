@@ -58,6 +58,7 @@ const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json')
 const BLOGS_FILE = path.join(DATA_DIR, 'blogs.json')
 const CLIENTS_FILE = path.join(DATA_DIR, 'clients.json')
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json')
+const TEAM_FILE = path.join(DATA_DIR, 'team.json')
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -106,6 +107,20 @@ let blogPosts = loadData(BLOGS_FILE, [
 ])
 let clients = loadData(CLIENTS_FILE, [])
 let contacts = loadData(CONTACTS_FILE, [])
+let teamMembers = loadData(TEAM_FILE, [
+  {
+    id: 1,
+    name: "Sonam Tobgay",
+    title: "Founder",
+    position: "Principal Architect",
+    image: "/images/team/sonam-tobgay.jpg",
+    bio: "Sonam Tobgay is the founder and principal architect of NAMAS Architecture. With over 15 years of experience in sustainable architecture, he leads the vision of creating environmentally conscious buildings that honor Bhutanese traditions.",
+    email: "sonam@namasarchitecture.com",
+    linkedin: "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+])
 
 // ROOT ROUTE - Fix for "Cannot GET /"
 app.get("/", (req, res) => {
@@ -116,6 +131,7 @@ app.get("/", (req, res) => {
       projects: "/api/projects",
       blogs: "/api/blogs",
       contacts: "/api/contact",
+      team: "/api/team",
       search: "/api/search",
     },
     status: "Server is running successfully",
@@ -943,6 +959,167 @@ app.delete("/api/clients/:id", (req, res) => {
   })
 })
 
+// TEAM ROUTES
+
+// GET all team members
+app.get("/api/team", (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+
+    const paginatedTeam = teamMembers.slice(startIndex, endIndex)
+    
+    res.json({
+      success: true,
+      data: paginatedTeam,
+      pagination: {
+        page,
+        limit,
+        total: teamMembers.length,
+        totalPages: Math.ceil(teamMembers.length / limit)
+      }
+    })
+  } catch (error) {
+    console.error("Error fetching team members:", error)
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch team members"
+    })
+  }
+})
+
+// GET single team member
+app.get("/api/team/:id", (req, res) => {
+  const memberId = Number.parseInt(req.params.id)
+  const member = teamMembers.find((m) => m.id === memberId)
+
+  if (!member) {
+    return res.status(404).json({
+      success: false,
+      error: "Team member not found",
+    })
+  }
+
+  res.json({
+    success: true,
+    data: member,
+  })
+})
+
+// POST create team member
+app.post("/api/team", upload.single("image"), (req, res) => {
+  try {
+    const { name, title, position, bio, email, linkedin } = req.body
+    
+    if (!name || !title || !position) {
+      return res.status(400).json({
+        success: false,
+        error: "Name, title, and position are required"
+      })
+    }
+
+    const newMember = {
+      id: teamMembers.length > 0 ? Math.max(...teamMembers.map(m => m.id)) + 1 : 1,
+      name: name.trim(),
+      title: title.trim(),
+      position: position.trim(),
+      bio: bio?.trim() || "",
+      email: email?.trim() || "",
+      linkedin: linkedin?.trim() || "",
+      image: req.file ? `/uploads/${req.file.filename}` : "",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+
+    teamMembers.push(newMember)
+    saveData(TEAM_FILE, teamMembers)
+
+    res.status(201).json({
+      success: true,
+      message: "Team member created successfully",
+      data: newMember
+    })
+  } catch (error) {
+    console.error("Error creating team member:", error)
+    res.status(500).json({
+      success: false,
+      error: "Failed to create team member",
+      message: error.message
+    })
+  }
+})
+
+// PUT update team member
+app.put("/api/team/:id", upload.single("image"), (req, res) => {
+  try {
+    const memberId = Number.parseInt(req.params.id)
+    const memberIndex = teamMembers.findIndex((m) => m.id === memberId)
+
+    if (memberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Team member not found"
+      })
+    }
+
+    const { name, title, position, bio, email, linkedin } = req.body
+    const existingMember = teamMembers[memberIndex]
+
+    const updatedMember = {
+      ...existingMember,
+      name: name?.trim() || existingMember.name,
+      title: title?.trim() || existingMember.title,
+      position: position?.trim() || existingMember.position,
+      bio: bio?.trim() || existingMember.bio,
+      email: email?.trim() || existingMember.email,
+      linkedin: linkedin?.trim() || existingMember.linkedin,
+      image: req.file ? `/uploads/${req.file.filename}` : existingMember.image,
+      updatedAt: new Date().toISOString()
+    }
+
+    teamMembers[memberIndex] = updatedMember
+    saveData(TEAM_FILE, teamMembers)
+
+    res.json({
+      success: true,
+      message: "Team member updated successfully",
+      data: updatedMember
+    })
+  } catch (error) {
+    console.error("Error updating team member:", error)
+    res.status(500).json({
+      success: false,
+      error: "Failed to update team member",
+      message: error.message
+    })
+  }
+})
+
+// DELETE team member
+app.delete("/api/team/:id", (req, res) => {
+  const memberId = Number.parseInt(req.params.id)
+  const memberIndex = teamMembers.findIndex((m) => m.id === memberId)
+
+  if (memberIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      error: "Team member not found"
+    })
+  }
+
+  const deletedMember = teamMembers[memberIndex]
+  teamMembers.splice(memberIndex, 1)
+  saveData(TEAM_FILE, teamMembers)
+  
+  res.json({
+    success: true,
+    message: "Team member deleted successfully",
+    data: deletedMember
+  })
+})
+
 // SEARCH ROUTES
 
 // POST search projects and blogs
@@ -1063,6 +1240,8 @@ app.use("*", (req, res) => {
       "POST /api/blogs",
       "GET /api/clients",
       "POST /api/clients",
+      "GET /api/team",
+      "POST /api/team",
       "POST /api/contact",
       "POST /api/search",
     ],
