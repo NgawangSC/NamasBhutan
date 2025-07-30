@@ -99,12 +99,9 @@ function AboutPage() {
         happyClients = 0
       }
       
-      // Calculate working hours (estimated based on projects and years in business)
-      // Average project duration: 3-6 months, 40 hours/week, 4 weeks/month
-      const averageProjectHours = 480 // 3 months * 4 weeks * 40 hours
-      const projectBasedHours = totalProjects * averageProjectHours
-      const minimumYearlyHours = yearsInBusiness * 2000 // 2000 hours per year standard
-      const totalWorkingHours = Math.max(projectBasedHours, minimumYearlyHours)
+      // Calculate working hours (1 project = 100 working hours)
+      const hoursPerProject = 100
+      const totalWorkingHours = totalProjects * hoursPerProject
       
       // Calculate awards - count from the awards timeline section (6 awards currently listed)
       // Can be enhanced to pull from awards data if made dynamic
