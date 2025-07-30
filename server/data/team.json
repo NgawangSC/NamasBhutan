@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Sonam Tobgay",
+    "title": "Founder",
+    "position": "Principal Architect",
+    "bio": "Founder and Principal Architect with over 15 years of experience in sustainable architecture and traditional Bhutanese design.",
+    "image": "/images/founder-pic.png",
+    "email": "sonam@namasarchitecture.com",
+    "phone": "+975-12345678",
+    "status": "Active",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+]

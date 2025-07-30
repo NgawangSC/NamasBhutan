@@ -119,6 +119,75 @@ class ApiService {
     });
   }
 
+  // Team Members API
+  static async getTeamMembers() {
+    return this.request('/team');
+  }
+
+  static async getTeamMember(id) {
+    return this.request(`/team/${id}`);
+  }
+
+  static async createTeamMember(teamMemberData) {
+    const formData = new FormData();
+    
+    // Append team member data (excluding linkedin and image)
+    Object.keys(teamMemberData).forEach(key => {
+      if (key !== 'image' && key !== 'linkedin') {
+        formData.append(key, teamMemberData[key]);
+      }
+    });
+    
+    // Append image file if exists
+    if (teamMemberData.image) {
+      formData.append('image', teamMemberData.image);
+    }
+    
+    return this.requestMultipart('/team', formData);
+  }
+
+  static async updateTeamMember(id, teamMemberData) {
+    const formData = new FormData();
+    
+    // Append team member data (excluding linkedin and image)
+    Object.keys(teamMemberData).forEach(key => {
+      if (key !== 'image' && key !== 'linkedin') {
+        formData.append(key, teamMemberData[key]);
+      }
+    });
+    
+    // Append image file if exists
+    if (teamMemberData.image) {
+      formData.append('image', teamMemberData.image);
+    }
+    
+    const url = `${API_BASE_URL}/team/${id}`;
+    
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        body: formData,
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
+  }
+
+  static async deleteTeamMember(id) {
+    return this.request(`/team/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Projects API (minimal for testing)
   static async getProjects() {
     return this.request('/projects');

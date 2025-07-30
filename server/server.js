@@ -58,6 +58,7 @@ const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json')
 const BLOGS_FILE = path.join(DATA_DIR, 'blogs.json')
 const CLIENTS_FILE = path.join(DATA_DIR, 'clients.json')
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json')
+const TEAM_FILE = path.join(DATA_DIR, 'team.json')
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -106,6 +107,20 @@ let blogPosts = loadData(BLOGS_FILE, [
 ])
 let clients = loadData(CLIENTS_FILE, [])
 let contacts = loadData(CONTACTS_FILE, [])
+let teamMembers = loadData(TEAM_FILE, [
+  {
+    id: 1,
+    name: "Sonam Tobgay",
+    title: "Founder",
+    position: "Principal Architect",
+    bio: "Founder and Principal Architect with over 15 years of experience in sustainable architecture and traditional Bhutanese design.",
+    image: "/images/founder-pic.png",
+    email: "sonam@namasarchitecture.com",
+    phone: "+975-12345678",
+    status: "Active",
+    createdAt: new Date().toISOString(),
+  }
+])
 
 // ROOT ROUTE - Fix for "Cannot GET /"
 app.get("/", (req, res) => {
@@ -940,6 +955,153 @@ app.delete("/api/clients/:id", (req, res) => {
     success: true,
     message: "Client deleted successfully",
     data: deletedClient,
+  })
+})
+
+// TEAM MEMBER ROUTES
+
+// GET all team members with optional pagination
+app.get("/api/team", (req, res) => {
+  const page = parseInt(req.query.page) || 1
+  const limit = parseInt(req.query.limit) || 0 // 0 means no limit (return all)
+  const startIndex = (page - 1) * limit
+  
+  let result = teamMembers
+  let totalPages = 1
+  
+  if (limit > 0) {
+    result = teamMembers.slice(startIndex, startIndex + limit)
+    totalPages = Math.ceil(teamMembers.length / limit)
+  }
+  
+  res.json({
+    success: true,
+    data: result,
+    count: result.length,
+    total: teamMembers.length,
+    page: limit > 0 ? page : 1,
+    totalPages: totalPages,
+    hasMore: limit > 0 ? page < totalPages : false
+  })
+})
+
+// GET single team member
+app.get("/api/team/:id", (req, res) => {
+  const teamMember = teamMembers.find((t) => t.id === Number.parseInt(req.params.id))
+  if (!teamMember) {
+    return res.status(404).json({
+      success: false,
+      error: "Team member not found",
+    })
+  }
+  res.json({
+    success: true,
+    data: teamMember,
+  })
+})
+
+// POST create new team member
+app.post("/api/team", upload.single("image"), (req, res) => {
+  try {
+    const { name, title, position, bio, email, phone, status } = req.body
+
+    // Validation
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing required field: name",
+      })
+    }
+
+    const newTeamMember = {
+      id: teamMembers.length > 0 ? Math.max(...teamMembers.map((t) => t.id)) + 1 : 1,
+      name,
+      title: title || "",
+      position: position || "",
+      bio: bio || "",
+      email: email || "",
+      phone: phone || "",
+      status: status || "Active",
+      image: req.file ? `/uploads/${req.file.filename}` : "/images/placeholder-avatar.png",
+      createdAt: new Date().toISOString(),
+    }
+
+    teamMembers.push(newTeamMember)
+    saveData(TEAM_FILE, teamMembers)
+    res.status(201).json({
+      success: true,
+      data: newTeamMember,
+      message: "Team member created successfully",
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to create team member",
+      details: error.message,
+    })
+  }
+})
+
+// PUT update team member
+app.put("/api/team/:id", upload.single("image"), (req, res) => {
+  try {
+    const teamMemberId = Number.parseInt(req.params.id)
+    const teamMemberIndex = teamMembers.findIndex((t) => t.id === teamMemberId)
+
+    if (teamMemberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Team member not found",
+      })
+    }
+
+    const updatedTeamMember = {
+      ...teamMembers[teamMemberIndex],
+      ...req.body,
+      id: teamMemberId,
+      updatedAt: new Date().toISOString(),
+    }
+
+    // Handle new image if uploaded
+    if (req.file) {
+      updatedTeamMember.image = `/uploads/${req.file.filename}`
+    }
+
+    teamMembers[teamMemberIndex] = updatedTeamMember
+    saveData(TEAM_FILE, teamMembers)
+    res.json({
+      success: true,
+      data: updatedTeamMember,
+      message: "Team member updated successfully",
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to update team member",
+      details: error.message,
+    })
+  }
+})
+
+// DELETE team member
+app.delete("/api/team/:id", (req, res) => {
+  const teamMemberId = Number.parseInt(req.params.id)
+  const teamMemberIndex = teamMembers.findIndex((t) => t.id === teamMemberId)
+
+  if (teamMemberIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      error: "Team member not found",
+    })
+  }
+
+  const deletedTeamMember = teamMembers[teamMemberIndex]
+  teamMembers.splice(teamMemberIndex, 1)
+  saveData(TEAM_FILE, teamMembers)
+  res.json({
+    success: true,
+    message: "Team member deleted successfully",
+    data: deletedTeamMember,
   })
 })
 
