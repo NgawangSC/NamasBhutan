@@ -63,7 +63,8 @@
 
 .project-gallery {
   position: relative;
-  height: 70vh;
+  height: 75vh; /* Increased height for better single project showcase */
+  min-height: 500px; /* Ensure minimum height */
   overflow: hidden;
 }
 
@@ -100,7 +101,7 @@
 }
 
 .project-title-overlay h1 {
-  font-size: 1.5rem;
+  font-size: 2.5rem; /* Larger title for single project focus */
   font-weight: 300;
   color: white;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
@@ -202,8 +203,10 @@
 
 .project-info-section {
   background: #000;
-  padding: 20px;
+  padding: 40px 20px; /* Increased padding for better spacing */
   position: relative;
+  max-width: 1400px;
+  margin: 0 auto; /* Center the content */
 }
 
 .project-info-table {
@@ -285,26 +288,32 @@
   margin-top: 40px;
   padding: 30px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 800px; /* Limit width for better readability */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .project-description-section h2 {
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* Slightly larger heading */
   margin-bottom: 20px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  text-align: center; /* Center align for single project */
 }
 
 .project-description-section p {
   color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
-  font-size: 1rem;
+  line-height: 1.8; /* Better line height for readability */
+  font-size: 1.1rem; /* Slightly larger text */
+  text-align: center; /* Center align for single project */
 }
 
 .project-category-section {
   margin-top: 20px;
   padding: 20px 0;
+  text-align: center; /* Center align for single project */
 }
 
 .project-category-section h3 {
@@ -322,8 +331,17 @@
 
 /* Tablet styles */
 @media (max-width: 1024px) and (min-width: 769px) {
+  .project-gallery {
+    height: 70vh;
+    min-height: 450px;
+  }
+
+  .project-title-overlay h1 {
+    font-size: 2.2rem;
+  }
+
   .project-info-section {
-    padding: 30px 24px;
+    padding: 35px 24px;
   }
 
   .info-row {
@@ -334,12 +352,25 @@
   .info-cell {
     font-size: 13px;
   }
+
+  .project-description-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .project-description-section p {
+    font-size: 1rem;
+  }
 }
 
 /* Mobile and small tablet styles */
 @media (max-width: 768px) {
   .project-detail-page {
     padding-top: 70px;
+  }
+
+  .project-gallery {
+    height: 60vh;
+    min-height: 400px;
   }
 
   .project-detail-page .header-content {
@@ -352,11 +383,12 @@
 
   .project-title-overlay {
     left: 24px;
-    bottom: 40px;
+    right: 24px;
+    bottom: 30px;
   }
 
   .project-title-overlay h1 {
-    font-size: 2rem;
+    font-size: 1.8rem; /* Optimized for mobile */
   }
 
   .nav-arrow {
@@ -373,7 +405,7 @@
   }
 
   .project-info-section {
-    padding: 40px 24px;
+    padding: 30px 24px;
   }
 
   /* Create a more responsive layout for project details */
@@ -399,6 +431,20 @@
   .info-cell {
     padding: 12px 0;
     position: relative;
+  }
+
+  .project-description-section {
+    padding: 25px 0;
+    margin-top: 30px;
+  }
+
+  .project-description-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .project-description-section p {
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   /* Add labels before each data cell on mobile */

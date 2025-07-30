@@ -1,13 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useData } from "../contexts/DataContext"
 import { getImageUrl } from "../utils/imageUtils"
 import "./ProjectDetailPage.css"
 
 const ProjectDetailPage = () => {
-  const { id } = useParams()
   const navigate = useNavigate()
   const { projects, loading, fetchProjects } = useData()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -34,14 +33,15 @@ const ProjectDetailPage = () => {
   }, [loading.projects, fetchProjects])
 
   useEffect(() => {
-    const foundProject = projects.find((p) => p.id === Number.parseInt(id))
-    setProject(foundProject)
+    // Always show the first project (ID: 1) regardless of URL
+    const firstProject = projects.find((p) => p.id === 1)
+    setProject(firstProject)
     
     // Reset image index when project changes
-    if (foundProject) {
+    if (firstProject) {
       setCurrentImageIndex(0)
     }
-  }, [id, projects])
+  }, [projects])
 
   const handlePrevImage = () => {
     if (project && project.images && project.images.length > 0) {

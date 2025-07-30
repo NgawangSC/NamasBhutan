@@ -107,6 +107,7 @@ function App() {
                   <Route path="/supervision" element={<SupervisionPage />} />
                   <Route path="/management" element={<ManagementPage />} />
                   <Route path="/real-estate" element={<RealEstatePage />} />
+                  <Route path="/project" element={<ProjectDetailPage />} />
                   <Route path="/project/:id" element={<ProjectDetailPage />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/:id" element={<BlogDetailPage />} />
