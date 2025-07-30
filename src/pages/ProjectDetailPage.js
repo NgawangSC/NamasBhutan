@@ -58,8 +58,6 @@ const ProjectDetailPage = () => {
   const handleIndicatorClick = (index) => {
     setCurrentImageIndex(index)
   }
-  
-
 
   // Show loading only if we truly have no data and are actively loading
   if (loading.projects && projects.length === 0) {
@@ -97,8 +95,6 @@ const ProjectDetailPage = () => {
       ? [getImageUrl(project.image)] 
       : ["/placeholder.svg"]
 
-
-
   return (
     <div className="project-detail-page">
       <div className="project-gallery">
@@ -120,49 +116,48 @@ const ProjectDetailPage = () => {
                 console.warn('Project detail image failed to load:', projectImages[currentImageIndex]);
                 e.target.src = "/placeholder.svg?height=400&width=600&text=Image+Not+Found";
               }}
-
             />
-                          <div className="project-title-overlay">
-                <h1>{project.title}</h1>
-                {projectImages.length > 1 && (
-                  <div className="image-counter">
-                    {currentImageIndex + 1} / {projectImages.length}
-                  </div>
-                )}
-                              <button 
-                 onClick={async () => {
-                   const btn = document.querySelector('.refresh-btn');
-                   const originalText = btn.textContent;
-                   
-                   try {
-                     btn.textContent = '⟳ Loading...';
-                     btn.disabled = true;
-                     await fetchProjects();
-                     
-                     // Show success indicator
-                     btn.textContent = '✓ Updated';
-                     btn.style.background = 'rgba(40, 167, 69, 0.8)';
-                     setTimeout(() => {
-                       btn.textContent = originalText;
-                       btn.style.background = '';
-                       btn.disabled = false;
-                     }, 2000);
-                   } catch (error) {
-                     console.error('Failed to refresh:', error);
-                     btn.textContent = '✗ Error';
-                     btn.style.background = 'rgba(220, 53, 69, 0.8)';
-                     setTimeout(() => {
-                       btn.textContent = originalText;
-                       btn.style.background = '';
-                       btn.disabled = false;
-                     }, 2000);
-                   }
-                 }}
-                 className="refresh-btn"
-                 title="Refresh project images"
-               >
-                 ↻ Refresh
-               </button>
+            <div className="project-title-overlay">
+              <h1>{project.title}</h1>
+              {projectImages.length > 1 && (
+                <div className="image-counter">
+                  {currentImageIndex + 1} / {projectImages.length}
+                </div>
+              )}
+              <button 
+                onClick={async () => {
+                  const btn = document.querySelector('.refresh-btn');
+                  const originalText = btn.textContent;
+                  
+                  try {
+                    btn.textContent = '⟳ Loading...';
+                    btn.disabled = true;
+                    await fetchProjects();
+                    
+                    // Show success indicator
+                    btn.textContent = '✓ Updated';
+                    btn.style.background = 'rgba(40, 167, 69, 0.8)';
+                    setTimeout(() => {
+                      btn.textContent = originalText;
+                      btn.style.background = '';
+                      btn.disabled = false;
+                    }, 2000);
+                  } catch (error) {
+                    console.error('Failed to refresh:', error);
+                    btn.textContent = '✗ Error';
+                    btn.style.background = 'rgba(220, 53, 69, 0.8)';
+                    setTimeout(() => {
+                      btn.textContent = originalText;
+                      btn.style.background = '';
+                      btn.disabled = false;
+                    }, 2000);
+                  }
+                }}
+                className="refresh-btn"
+                title="Refresh project images"
+              >
+                ↻ Refresh
+              </button>
             </div>
           </div>
 
