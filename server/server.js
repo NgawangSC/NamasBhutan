@@ -58,6 +58,7 @@ const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json')
 const BLOGS_FILE = path.join(DATA_DIR, 'blogs.json')
 const CLIENTS_FILE = path.join(DATA_DIR, 'clients.json')
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json')
+const TEAM_MEMBERS_FILE = path.join(DATA_DIR, 'team-members.json')
 
 
 // Ensure data directory exists
@@ -107,6 +108,7 @@ let blogPosts = loadData(BLOGS_FILE, [
 ])
 let clients = loadData(CLIENTS_FILE, [])
 let contacts = loadData(CONTACTS_FILE, [])
+let teamMembers = loadData(TEAM_MEMBERS_FILE, [])
 
 
 
@@ -943,6 +945,136 @@ app.delete("/api/clients/:id", (req, res) => {
     success: true,
     message: "Client deleted successfully",
     data: deletedClient,
+  })
+})
+
+// TEAM MEMBERS ROUTES
+
+// GET all team members
+app.get("/api/team-members", (req, res) => {
+  res.json({
+    success: true,
+    data: teamMembers,
+  })
+})
+
+// GET team member by ID
+app.get("/api/team-members/:id", (req, res) => {
+  const memberId = Number.parseInt(req.params.id)
+  const member = teamMembers.find((m) => m.id === memberId)
+
+  if (!member) {
+    return res.status(404).json({
+      success: false,
+      error: "Team member not found",
+    })
+  }
+
+  res.json({
+    success: true,
+    data: member,
+  })
+})
+
+// POST create new team member
+app.post("/api/team-members", upload.single("image"), (req, res) => {
+  try {
+    const { name, title, position } = req.body
+
+    if (!name || !title || !position) {
+      return res.status(400).json({
+        success: false,
+        error: "Name, title, and position are required",
+      })
+    }
+
+    const newMember = {
+      id: teamMembers.length > 0 ? Math.max(...teamMembers.map((m) => m.id)) + 1 : 1,
+      name,
+      title,
+      position,
+      image: req.file ? `/uploads/${req.file.filename}` : null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    teamMembers.push(newMember)
+    saveData(TEAM_MEMBERS_FILE, teamMembers)
+
+    res.status(201).json({
+      success: true,
+      data: newMember,
+      message: "Team member created successfully",
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to create team member",
+      details: error.message,
+    })
+  }
+})
+
+// PUT update team member
+app.put("/api/team-members/:id", upload.single("image"), (req, res) => {
+  try {
+    const memberId = Number.parseInt(req.params.id)
+    const memberIndex = teamMembers.findIndex((m) => m.id === memberId)
+
+    if (memberIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Team member not found",
+      })
+    }
+
+    const updatedMember = {
+      ...teamMembers[memberIndex],
+      ...req.body,
+      id: memberId,
+      updatedAt: new Date().toISOString(),
+    }
+
+    // Handle new image if uploaded
+    if (req.file) {
+      updatedMember.image = `/uploads/${req.file.filename}`
+    }
+
+    teamMembers[memberIndex] = updatedMember
+    saveData(TEAM_MEMBERS_FILE, teamMembers)
+    res.json({
+      success: true,
+      data: updatedMember,
+      message: "Team member updated successfully",
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Failed to update team member",
+      details: error.message,
+    })
+  }
+})
+
+// DELETE team member
+app.delete("/api/team-members/:id", (req, res) => {
+  const memberId = Number.parseInt(req.params.id)
+  const memberIndex = teamMembers.findIndex((m) => m.id === memberId)
+
+  if (memberIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      error: "Team member not found",
+    })
+  }
+
+  const deletedMember = teamMembers[memberIndex]
+  teamMembers.splice(memberIndex, 1)
+  saveData(TEAM_MEMBERS_FILE, teamMembers)
+  res.json({
+    success: true,
+    message: "Team member deleted successfully",
+    data: deletedMember,
   })
 })
 
