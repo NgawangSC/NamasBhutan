@@ -35,7 +35,7 @@ import RecentProjectsManager from "./dashboard/RecentProjectsManager"
 import BlogsManager from "./dashboard/BlogsManager"
 import ClientsManager from "./dashboard/ClientsManager"
 import MediaManager from "./dashboard/MediaManager"
-import UserSettings from "./dashboard/UserSettings"
+
 import DashboardLogin from "./dashboard/DashboardLogin"
 import "./App.css"
 
@@ -79,7 +79,6 @@ function App() {
                     <Route path="/blogs" element={<BlogsManager />} />
                     <Route path="/clients" element={<ClientsManager />} />
                     <Route path="/media" element={<MediaManager />} />
-                    <Route path="/settings" element={<UserSettings />} />
                   </Routes>
                 </DashboardLayout>
               </DataProvider>
