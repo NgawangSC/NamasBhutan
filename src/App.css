@@ -1102,6 +1102,12 @@ button {
   .clients-mobile-nav {
     display: flex;
   }
+
+  /* Responsive client logo images */
+  .client-logo img {
+    width: 120px;
+    height: 120px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1135,6 +1141,17 @@ button {
   .client-card {
     width: 300px;
     height: 180px;
+  }
+
+  /* Responsive client logo images for mobile */
+  .client-logo img {
+    width: 100px;
+    height: 100px;
+    padding: 8px;
+  }
+
+  .client-name {
+    font-size: 0.8rem;
   }
 }
 
@@ -1172,6 +1189,21 @@ button {
   /* Single card view on very small screens */
   .clients-grid {
     max-width: 280px;
+  }
+
+  /* Smaller client logo images for small mobile */
+  .client-logo img {
+    width: 80px;
+    height: 80px;
+    padding: 6px;
+  }
+
+  .client-name {
+    font-size: 0.75rem;
+  }
+
+  .client-logo {
+    gap: 10px;
   }
 }
 
