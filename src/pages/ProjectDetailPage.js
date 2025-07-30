@@ -13,6 +13,7 @@ const ProjectDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [project, setProject] = useState(null)
   const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false)
+  const [showDesignTeamPopup, setShowDesignTeamPopup] = useState(false)
 
   useEffect(() => {
     // Fetch projects on mount if not already loaded
@@ -59,7 +60,13 @@ const ProjectDetailPage = () => {
     setCurrentImageIndex(index)
   }
   
+  const handleDesignTeamClick = () => {
+    setShowDesignTeamPopup(true)
+  }
 
+  const closeDesignTeamPopup = () => {
+    setShowDesignTeamPopup(false)
+  }
 
   // Show loading only if we truly have no data and are actively loading
   if (loading.projects && projects.length === 0) {
@@ -203,7 +210,9 @@ const ProjectDetailPage = () => {
             <div className="info-cell">{project.client || 'N/A'}</div>
             <div className="info-cell">{project.year || 'N/A'}</div>
             <div className="info-cell">{project.location || 'N/A'}</div>
-            <div className="info-cell">{project.designTeam || 'NAMAS Architecture'}</div>
+            <div className="info-cell design-team-clickable" onClick={handleDesignTeamClick}>
+              {project.designTeam || 'NAMAS Architecture'}
+            </div>
             <div className="info-cell">{project.status || 'N/A'}</div>
           </div>
         </div>
@@ -221,6 +230,21 @@ const ProjectDetailPage = () => {
           </div>
         )}
       </div>
+      
+      {/* Design Team Popup */}
+      {showDesignTeamPopup && (
+        <div className="design-team-popup-overlay" onClick={closeDesignTeamPopup}>
+          <div className="design-team-popup" onClick={(e) => e.stopPropagation()}>
+            <div className="popup-header">
+              <h3>Design Team</h3>
+              <button className="popup-close" onClick={closeDesignTeamPopup}>×</button>
+            </div>
+            <div className="popup-content">
+              <p>{project.designTeam || 'NAMAS Architecture'}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
