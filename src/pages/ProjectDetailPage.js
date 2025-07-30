@@ -1,14 +1,17 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useData } from "../contexts/DataContext"
 import { getImageUrl } from "../utils/imageUtils"
 import "./ProjectDetailPage.css"
 
 const ProjectDetailPage = () => {
+  const { id } = useParams()
   const navigate = useNavigate()
   const { projects, loading, fetchProjects } = useData()
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [project, setProject] = useState(null)
   const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false)
 
   useEffect(() => {
@@ -30,43 +33,36 @@ const ProjectDetailPage = () => {
     }
   }, [loading.projects, fetchProjects])
 
-  const handleProjectClick = (projectId) => {
-    navigate(`/project/${projectId}`)
+  useEffect(() => {
+    const foundProject = projects.find((p) => p.id === Number.parseInt(id))
+    setProject(foundProject)
+    
+    // Reset image index when project changes
+    if (foundProject) {
+      setCurrentImageIndex(0)
+    }
+  }, [id, projects])
+
+  const handlePrevImage = () => {
+    if (project && project.images && project.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev === 0 ? project.images.length - 1 : prev - 1))
+    }
   }
 
-  const handleRefresh = async () => {
-    const btn = document.querySelector('.refresh-btn');
-    const originalText = btn.textContent;
-    
-    try {
-      btn.textContent = '⟳ Loading...';
-      btn.disabled = true;
-      await fetchProjects();
-      
-      // Show success indicator
-      btn.textContent = '✓ Updated';
-      btn.style.background = 'rgba(40, 167, 69, 0.8)';
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-      }, 2000);
-    } catch (error) {
-      console.error('Failed to refresh:', error);
-      btn.textContent = '✗ Error';
-      btn.style.background = 'rgba(220, 53, 69, 0.8)';
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-      }, 2000);
+  const handleNextImage = () => {
+    if (project && project.images && project.images.length > 0) {
+      setCurrentImageIndex((prev) => (prev === project.images.length - 1 ? 0 : prev + 1))
     }
+  }
+
+  const handleIndicatorClick = (index) => {
+    setCurrentImageIndex(index)
   }
 
   // Show loading only if we truly have no data and are actively loading
   if (loading.projects && projects.length === 0) {
     return (
-      <div className="projects-loading">
+      <div className="project-loading">
         <div>Loading projects...</div>
         <button 
           onClick={() => {
@@ -80,11 +76,11 @@ const ProjectDetailPage = () => {
     )
   }
 
-  if (projects.length === 0) {
+  if (!project) {
     return (
-      <div className="projects-loading">
-        <h2>No projects found</h2>
-        <p>There are no projects available at the moment.</p>
+      <div className="project-loading">
+        <h2>Project not found</h2>
+        <p>The project you're looking for doesn't exist or may have been removed.</p>
         <button onClick={() => navigate('/')} className="back-home-btn">
           Go Back to Home
         </button>
@@ -92,68 +88,133 @@ const ProjectDetailPage = () => {
     )
   }
 
+  // Handle both single image and multiple images
+  const projectImages = project.images && Array.isArray(project.images) && project.images.length > 0 
+    ? project.images.map(img => getImageUrl(img))
+    : project.image 
+      ? [getImageUrl(project.image)] 
+      : ["/placeholder.svg"]
+
   return (
-    <div className="projects-gallery-page">
-      <div className="projects-header">
-        <h1>Our Projects</h1>
-        <button 
-          onClick={handleRefresh}
-          className="refresh-btn"
-          title="Refresh projects"
-        >
-          ↻ Refresh
-        </button>
-      </div>
+    <div className="project-detail-page">
+      <div className="project-gallery">
+        <div className="gallery-container">
+          {projectImages.length > 1 && (
+            <button className="nav-arrow nav-arrow-left" onClick={handlePrevImage}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
 
-      <div className="projects-grid">
-        {projects.map((project) => {
-          const projectImage = project.images && Array.isArray(project.images) && project.images.length > 0 
-            ? getImageUrl(project.images[0])
-            : project.image 
-              ? getImageUrl(project.image) 
-              : "/placeholder.svg"
-
-          return (
-            <div 
-              key={project.id} 
-              className="project-card"
-              onClick={() => handleProjectClick(project.id)}
-            >
-              <div className="project-image-container">
-                <img
-                  src={projectImage}
-                  alt={project.title}
-                  className="project-image"
-                  onError={(e) => {
-                    console.warn('Project image failed to load:', projectImage);
-                    e.target.src = "/placeholder.svg?height=300&width=400&text=Image+Not+Found";
-                  }}
-                />
-                <div className="project-overlay">
-                  <div className="project-info">
-                    <h3 className="project-title">{project.title}</h3>
-                    <p className="project-category">{project.category}</p>
-                    <div className="project-details">
-                      <span className="project-location">{project.location}</span>
-                      <span className="project-year">{project.year}</span>
-                    </div>
-                    <div className="project-status">
-                      <span className={`status-badge ${project.status?.toLowerCase().replace(' ', '-')}`}>
-                        {project.status}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {project.description && (
-                <div className="project-description">
-                  <p>{project.description.length > 120 ? project.description.substring(0, 120) + '...' : project.description}</p>
+          <div className="gallery-image-container">
+            <img
+              src={projectImages[currentImageIndex] || "/placeholder.svg"}
+              alt={project.title}
+              className="gallery-image"
+              onError={(e) => {
+                console.warn('Project detail image failed to load:', projectImages[currentImageIndex]);
+                e.target.src = "/placeholder.svg?height=400&width=600&text=Image+Not+Found";
+              }}
+            />
+            <div className="project-title-overlay">
+              <h1>{project.title}</h1>
+              {projectImages.length > 1 && (
+                <div className="image-counter">
+                  {currentImageIndex + 1} / {projectImages.length}
                 </div>
               )}
+              <button 
+                onClick={async () => {
+                  const btn = document.querySelector('.refresh-btn');
+                  const originalText = btn.textContent;
+                  
+                  try {
+                    btn.textContent = '⟳ Loading...';
+                    btn.disabled = true;
+                    await fetchProjects();
+                    
+                    // Show success indicator
+                    btn.textContent = '✓ Updated';
+                    btn.style.background = 'rgba(40, 167, 69, 0.8)';
+                    setTimeout(() => {
+                      btn.textContent = originalText;
+                      btn.style.background = '';
+                      btn.disabled = false;
+                    }, 2000);
+                  } catch (error) {
+                    console.error('Failed to refresh:', error);
+                    btn.textContent = '✗ Error';
+                    btn.style.background = 'rgba(220, 53, 69, 0.8)';
+                    setTimeout(() => {
+                      btn.textContent = originalText;
+                      btn.style.background = '';
+                      btn.disabled = false;
+                    }, 2000);
+                  }
+                }}
+                className="refresh-btn"
+                title="Refresh project images"
+              >
+                ↻ Refresh
+              </button>
             </div>
-          )
-        })}
+          </div>
+
+          {projectImages.length > 1 && (
+            <button className="nav-arrow nav-arrow-right" onClick={handleNextImage}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {projectImages.length > 1 && (
+          <div className="gallery-indicators">
+            {projectImages.map((_, index) => (
+              <button
+                key={index}
+                className={`indicator ${index === currentImageIndex ? "active" : ""}`}
+                onClick={() => handleIndicatorClick(index)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="project-info-section">
+        <div className="project-info-table">
+          <div className="info-row">
+            <div className="info-cell">PROJECT NAME</div>
+            <div className="info-cell">CLIENT</div>
+            <div className="info-cell">YEAR</div>
+            <div className="info-cell">LOCATION</div>
+            <div className="info-cell">DESIGN TEAM</div>
+            <div className="info-cell">STATUS</div>
+          </div>
+          <div className="info-row info-data">
+            <div className="info-cell">{project.title || 'N/A'}</div>
+            <div className="info-cell">{project.client || 'N/A'}</div>
+            <div className="info-cell">{project.year || 'N/A'}</div>
+            <div className="info-cell">{project.location || 'N/A'}</div>
+            <div className="info-cell">{project.designTeam || 'NAMAS Architecture'}</div>
+            <div className="info-cell">{project.status || 'N/A'}</div>
+          </div>
+        </div>
+        
+        {project.description && (
+          <div className="project-description-section">
+            <h2>Project Description</h2>
+            <p>{project.description}</p>
+          </div>
+        )}
+        
+        {project.category && (
+          <div className="project-category-section">
+            <h3>Category: <span>{project.category}</span></h3>
+          </div>
+        )}
       </div>
     </div>
   )
