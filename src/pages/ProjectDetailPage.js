@@ -211,7 +211,7 @@ const ProjectDetailPage = () => {
             <div className="info-cell">{project.year || 'N/A'}</div>
             <div className="info-cell">{project.location || 'N/A'}</div>
             <div className="info-cell design-team-clickable" onClick={handleDesignTeamClick}>
-              {project.designTeam || 'NAMAS Architecture'}
+              Design Team
             </div>
             <div className="info-cell">{project.status || 'N/A'}</div>
           </div>
