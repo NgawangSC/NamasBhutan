@@ -55,7 +55,49 @@ const AnimatedCounter = ({ end, suffix = "", startAnimation, formatLargeNumbers 
 }
 
 function AboutPage() {
-  const [selectedTestimonial, setSelectedTestimonial] = useState(0)
+  const [selectedTestimonial, setSelectedTestimonial] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // Minimum swipe distance
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && selectedTestimonial < testimonials.length - 1) {
+      setSelectedTestimonial(selectedTestimonial + 1);
+    }
+    if (isRightSwipe && selectedTestimonial > 0) {
+      setSelectedTestimonial(selectedTestimonial - 1);
+    }
+  };
+
+  const nextTestimonial = () => {
+    setSelectedTestimonial((prev) => 
+      prev === testimonials.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevTestimonial = () => {
+    setSelectedTestimonial((prev) => 
+      prev === 0 ? testimonials.length - 1 : prev - 1
+    );
+  };
+
   const [startCounters, setStartCounters] = useState(false)
   const statisticsRef = useRef(null)
   const navigate = useNavigate()
@@ -534,10 +576,43 @@ function AboutPage() {
                 </button>
               ))}
             </div>
-            <div className="testimonial-quote-container">
+            <div 
+              className="testimonial-quote-container"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               <div className="quote-mark">"</div>
               <div className="testimonial-quote">{testimonials[selectedTestimonial].quote}</div>
               <div className="testimonial-author">-{testimonials[selectedTestimonial].name}</div>
+            </div>
+            
+            {/* Mobile Navigation */}
+            <div className="testimonials-mobile-nav">
+              <button 
+                className="testimonial-nav-btn prev" 
+                onClick={prevTestimonial}
+                aria-label="Previous testimonial"
+              >
+                ‹
+              </button>
+              <div className="testimonials-dots">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`testimonial-dot ${index === selectedTestimonial ? 'active' : ''}`}
+                    onClick={() => setSelectedTestimonial(index)}
+                    aria-label={`Go to testimonial ${index + 1}`}
+                  />
+                ))}
+              </div>
+              <button 
+                className="testimonial-nav-btn next" 
+                onClick={nextTestimonial}
+                aria-label="Next testimonial"
+              >
+                ›
+              </button>
             </div>
           </div>
         </div>
