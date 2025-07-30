@@ -8,6 +8,8 @@ const DashboardLayout = ({ children, setIsAuthenticated }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("dashboardAuth")
+    localStorage.removeItem("authToken")
+    localStorage.removeItem("currentUser")
     setIsAuthenticated(false)
     navigate("/dashboard/login")
   }
@@ -17,6 +19,7 @@ const DashboardLayout = ({ children, setIsAuthenticated }) => {
     { path: "/dashboard/projects", label: "Projects", icon: "🏗️" },
     { path: "/dashboard/blogs", label: "Blogs", icon: "📝" },
     { path: "/dashboard/clients", label: "Clients", icon: "🏢" },
+    { path: "/dashboard/settings", label: "Settings", icon: "⚙️" },
   ]
 
   return (

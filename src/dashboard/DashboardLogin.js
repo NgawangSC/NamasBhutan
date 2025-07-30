@@ -25,12 +25,32 @@ const DashboardLogin = ({ setIsAuthenticated }) => {
     setIsLoading(true)
     setError("")
 
-    // Simple authentication (replace with real authentication)
-    if (credentials.username === "admin" && credentials.password === "admin123") {
-      localStorage.setItem("dashboardAuth", "true")
-      setIsAuthenticated(true)
-    } else {
-      setError("Invalid username or password")
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: credentials.username,
+          password: credentials.password
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        // Store auth token and user info
+        localStorage.setItem("dashboardAuth", "true")
+        localStorage.setItem("authToken", data.data.token)
+        localStorage.setItem("currentUser", JSON.stringify(data.data.user))
+        setIsAuthenticated(true)
+      } else {
+        setError(data.error || "Login failed")
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setError("Unable to connect to server. Please try again.")
     }
 
     setIsLoading(false)

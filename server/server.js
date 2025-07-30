@@ -58,6 +58,7 @@ const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json')
 const BLOGS_FILE = path.join(DATA_DIR, 'blogs.json')
 const CLIENTS_FILE = path.join(DATA_DIR, 'clients.json')
 const CONTACTS_FILE = path.join(DATA_DIR, 'contacts.json')
+const USERS_FILE = path.join(DATA_DIR, 'users.json')
 
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -106,6 +107,261 @@ let blogPosts = loadData(BLOGS_FILE, [
 ])
 let clients = loadData(CLIENTS_FILE, [])
 let contacts = loadData(CONTACTS_FILE, [])
+
+// Load or create default admin user
+let users = loadData(USERS_FILE, [
+  {
+    id: 1,
+    username: "admin",
+    password: "admin123", // In production, this should be hashed
+    role: "admin",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+])
+
+// Save initial users if file doesn't exist
+if (!fs.existsSync(USERS_FILE)) {
+  saveData(USERS_FILE, users)
+}
+
+// Simple password hashing (in production, use bcrypt)
+const hashPassword = (password) => {
+  // For demo purposes, using simple base64 encoding
+  // In production, use bcrypt or similar
+  return Buffer.from(password).toString('base64')
+}
+
+const verifyPassword = (password, hashedPassword) => {
+  return Buffer.from(password).toString('base64') === hashedPassword
+}
+
+// Authentication middleware
+const authenticateUser = (req, res, next) => {
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      success: false,
+      error: 'No token provided'
+    })
+  }
+
+  const token = authHeader.substring(7)
+  // Simple token validation (in production, use JWT)
+  if (token === 'dashboard-auth-token') {
+    next()
+  } else {
+    res.status(401).json({
+      success: false,
+      error: 'Invalid token'
+    })
+  }
+}
+
+// AUTH ROUTES
+
+// POST login
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { username, password } = req.body
+
+    if (!username || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Username and password are required'
+      })
+    }
+
+    const user = users.find(u => u.username === username)
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid credentials'
+      })
+    }
+
+    // Check password (handle both hashed and unhashed for backward compatibility)
+    const isPasswordValid = user.password === password || verifyPassword(password, user.password)
+    
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid credentials'
+      })
+    }
+
+    // Return simple token (in production, use JWT)
+    res.json({
+      success: true,
+      data: {
+        token: 'dashboard-auth-token',
+        user: {
+          id: user.id,
+          username: user.username,
+          role: user.role
+        }
+      },
+      message: 'Login successful'
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Login failed',
+      details: error.message
+    })
+  }
+})
+
+// POST change password
+app.post('/api/auth/change-password', authenticateUser, (req, res) => {
+  try {
+    const { currentPassword, newPassword, username } = req.body
+
+    if (!currentPassword || !newPassword || !username) {
+      return res.status(400).json({
+        success: false,
+        error: 'Current password, new password, and username are required'
+      })
+    }
+
+    const userIndex = users.findIndex(u => u.username === username)
+    if (userIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      })
+    }
+
+    const user = users[userIndex]
+    
+    // Verify current password
+    const isCurrentPasswordValid = user.password === currentPassword || verifyPassword(currentPassword, user.password)
+    
+    if (!isCurrentPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        error: 'Current password is incorrect'
+      })
+    }
+
+    // Update password
+    users[userIndex] = {
+      ...user,
+      password: newPassword, // In production, hash this
+      updatedAt: new Date().toISOString()
+    }
+
+    saveData(USERS_FILE, users)
+
+    res.json({
+      success: true,
+      message: 'Password updated successfully'
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to change password',
+      details: error.message
+    })
+  }
+})
+
+// POST change username
+app.post('/api/auth/change-username', authenticateUser, (req, res) => {
+  try {
+    const { currentUsername, newUsername, password } = req.body
+
+    if (!currentUsername || !newUsername || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Current username, new username, and password are required'
+      })
+    }
+
+    const userIndex = users.findIndex(u => u.username === currentUsername)
+    if (userIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      })
+    }
+
+    // Check if new username already exists
+    const existingUser = users.find(u => u.username === newUsername && u.id !== users[userIndex].id)
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        error: 'Username already exists'
+      })
+    }
+
+    const user = users[userIndex]
+    
+    // Verify password
+    const isPasswordValid = user.password === password || verifyPassword(password, user.password)
+    
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        error: 'Password is incorrect'
+      })
+    }
+
+    // Update username
+    users[userIndex] = {
+      ...user,
+      username: newUsername,
+      updatedAt: new Date().toISOString()
+    }
+
+    saveData(USERS_FILE, users)
+
+    res.json({
+      success: true,
+      message: 'Username updated successfully',
+      data: {
+        username: newUsername
+      }
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to change username',
+      details: error.message
+    })
+  }
+})
+
+// GET current user
+app.get('/api/auth/user', authenticateUser, (req, res) => {
+  try {
+    // In a real app, you'd get user info from the token
+    // For this demo, return the first admin user
+    const user = users.find(u => u.role === 'admin')
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      })
+    }
+
+    res.json({
+      success: true,
+      data: {
+        id: user.id,
+        username: user.username,
+        role: user.role
+      }
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get user info',
+      details: error.message
+    })
+  }
+})
 
 // ROOT ROUTE - Fix for "Cannot GET /"
 app.get("/", (req, res) => {
@@ -1065,6 +1321,10 @@ app.use("*", (req, res) => {
       "POST /api/clients",
       "POST /api/contact",
       "POST /api/search",
+      "POST /api/auth/login",
+      "POST /api/auth/change-password",
+      "POST /api/auth/change-username",
+      "GET /api/auth/user",
     ],
   })
 })
