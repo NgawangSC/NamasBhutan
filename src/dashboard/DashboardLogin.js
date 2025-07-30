@@ -1,9 +1,9 @@
-"use client"
-
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import "./DashboardLogin.css"
 
 const DashboardLogin = ({ setIsAuthenticated }) => {
+  const navigate = useNavigate()
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -33,6 +33,7 @@ const DashboardLogin = ({ setIsAuthenticated }) => {
     ) {
       localStorage.setItem("dashboardAuth", "true")
       setIsAuthenticated(true)
+      navigate("/dashboard")
     } else {
       setError("Invalid credentials. Try: admin/admin123 or admin/admin or admin/password")
     }
