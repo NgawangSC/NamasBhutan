@@ -1,0 +1,39 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+restartPolicyType = "never"
+numReplicas = 1
+
+[[services]]
+name = "frontend"
+source = "."
+rootDirectory = ""
+
+[services.build]
+buildCommand = "npm install && npm run build"
+startCommand = "npx serve -s build -l 3000"
+
+[services.variables]
+NODE_ENV = "production"
+REACT_APP_API_URL = "https://${{RAILWAY_PUBLIC_DOMAIN}}/api"
+REACT_APP_SERVER_URL = "https://${{RAILWAY_PUBLIC_DOMAIN}}"
+
+[[services]]
+name = "backend"
+source = "./server"
+rootDirectory = "server"
+
+[services.build]
+buildCommand = "npm install"
+startCommand = "npm start"
+
+[services.variables]
+NODE_ENV = "production"
+PORT = "5000"
+ALLOWED_ORIGINS = "https://${{RAILWAY_PUBLIC_DOMAIN}}"
+PRODUCTION_URL = "https://${{RAILWAY_PUBLIC_DOMAIN}}"
+
+[[services]]
+name = "postgres"
+source = "postgres:15"
