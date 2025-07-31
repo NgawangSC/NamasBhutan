@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useData } from "../contexts/DataContext"
-import API from "../services/api"
 import "./AboutPage.css"
 
 // Custom hook for counter animation
@@ -58,32 +57,16 @@ const AnimatedCounter = ({ end, suffix = "", startAnimation, formatLargeNumbers 
 function AboutPage() {
   const [selectedTestimonial, setSelectedTestimonial] = useState(0)
   const [startCounters, setStartCounters] = useState(false)
-  const [teamMembers, setTeamMembers] = useState([])
-  const [teamLoading, setTeamLoading] = useState(false)
   const statisticsRef = useRef(null)
   const navigate = useNavigate()
   
   // Get data from context
   const { data, loading, fetchProjects, fetchClients } = useData()
   
-  // Fetch team members
-  const fetchTeamMembers = async () => {
-    try {
-      setTeamLoading(true)
-      const response = await API.getTeamMembers()
-      setTeamMembers(response.data || [])
-    } catch (error) {
-      console.error('Error fetching team members:', error)
-    } finally {
-      setTeamLoading(false)
-    }
-  }
-  
   // Fetch data on component mount
   useEffect(() => {
     fetchProjects()
     fetchClients()
-    fetchTeamMembers()
   }, [fetchProjects, fetchClients])
   
 
@@ -272,30 +255,16 @@ function AboutPage() {
           <div className="section-header">
             <h2 className="section-title">About Us</h2>
           </div>
-          {teamLoading ? (
-            <div className="loading">Loading team members...</div>
-          ) : (
-            <div className="team-members-grid">
-              {teamMembers.map((member) => (
-                <div key={member.id} className="founder-card">
-                  <div className="founder-image">
-                    <img 
-                      src={API.getImageUrl(member.image) || "/images/founder-pic.png"} 
-                      alt={member.name}
-                      onError={(e) => {
-                        e.target.src = "/images/founder-pic.png"
-                      }}
-                    />
-                  </div>
-                  <div className="founder-info">
-                    <h3 className="founder-name">{member.name}</h3>
-                    <p className="founder-title">{member.title}</p>
-                    <p className="founder-position">{member.position}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="founder-card">
+            <div className="founder-image">
+              <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
             </div>
-          )}
+            <div className="founder-info">
+              <h3 className="founder-name">Sonam Tobgay</h3>
+              <p className="founder-title">Founder</p>
+              <p className="founder-position">Principal Architect</p>
+            </div>
+          </div>
           <div className="about-description">
             <p>
               Founded in 2021 by Mr. Sonam Tobgay, NAMAS Design and Build delivers integrated architectural, planning,
