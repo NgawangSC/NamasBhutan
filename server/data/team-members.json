@@ -16,5 +16,13 @@
     "image": "/images/founder-pic.png",
     "createdAt": "2025-07-31T06:28:43.650Z",
     "updatedAt": "2025-07-31T06:29:01.164Z"
+  },
+  {
+    "id": 3,
+    "name": "Michael Chen",
+    "title": "Project Manager",
+    "position": "Operations Lead",
+    "image": "/images/founder-pic.png",
+    "createdAt": "2025-07-31T06:33:06.375Z"
   }
 ]

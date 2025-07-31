@@ -282,35 +282,16 @@ function AboutPage() {
           <div className="section-header">
             <h2 className="section-title">About Us</h2>
           </div>
-          {teamLoading ? (
-            <div className="loading">Loading team members...</div>
-          ) : (
-            <div className="team-members-grid">
-              {teamMembers.map((member) => (
-                <div key={member.id} className="founder-card">
-                  <div className="founder-image">
-                    <img 
-                      src={API.getImageUrl(member.image) || "/images/founder-pic.png"} 
-                      alt={member.name}
-                      onError={(e) => {
-                        e.target.src = "/images/founder-pic.png"
-                      }}
-                    />
-                  </div>
-                  <div className="founder-info">
-                    <h3 className="founder-name">{member.name}</h3>
-                    <p className="founder-title">{member.title}</p>
-                    <p className="founder-position">{member.position}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="founder-card">
+            <div className="founder-image">
+              <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
             </div>
-          )}
-          {!teamLoading && teamMembers.length === 0 && (
-            <div className="no-team-members">
-              <p>No team members found. Add team members through the dashboard.</p>
+            <div className="founder-info">
+              <h3 className="founder-name">Sonam Tobgay</h3>
+              <p className="founder-title">Founder</p>
+              <p className="founder-position">Principal Architect</p>
             </div>
-          )}
+          </div>
           <div className="about-description">
             <p>
               Founded in 2021 by Mr. Sonam Tobgay, NAMAS Design and Build delivers integrated architectural, planning,
@@ -410,98 +391,35 @@ function AboutPage() {
           <div className="team-subtitle">
             <h3>Experts ready to serve</h3>
           </div>
-          <div className="team-grid">
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
+          {teamLoading ? (
+            <div className="loading">Loading team members...</div>
+          ) : (
+            <div className="team-grid">
+              {teamMembers.map((member) => (
+                <div key={member.id} className="team-member-card">
+                  <div className="team-member-image">
+                    <img 
+                      src={API.getImageUrl(member.image) || "/images/founder-pic.png"} 
+                      alt={member.name}
+                      onError={(e) => {
+                        e.target.src = "/images/founder-pic.png"
+                      }}
+                    />
+                  </div>
+                  <div className="team-member-info">
+                    <h4 className="team-member-name">{member.name}</h4>
+                    <p className="team-member-title">{member.title}</p>
+                    <p className="team-member-position">{member.position}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
+          )}
+          {!teamLoading && teamMembers.length === 0 && (
+            <div className="no-team-members">
+              <p>No team members found. Add team members through the dashboard.</p>
             </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-            <div className="team-member-card">
-              <div className="team-member-image">
-                <img src="/images/founder-pic.png" alt="Sonam Tobgay" />
-              </div>
-              <div className="team-member-info">
-                <h4 className="team-member-name">Sonam Tobgay</h4>
-                <p className="team-member-title">Founder</p>
-                <p className="team-member-position">Principal Architect</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
