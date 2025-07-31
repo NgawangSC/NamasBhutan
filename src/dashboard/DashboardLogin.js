@@ -1,9 +1,9 @@
-"use client"
-
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import "./DashboardLogin.css"
 
 const DashboardLogin = ({ setIsAuthenticated }) => {
+  const navigate = useNavigate()
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -27,14 +27,13 @@ const DashboardLogin = ({ setIsAuthenticated }) => {
 
     // Very simple authentication - just check the values directly
     if (
-      (credentials.username === "admin" && credentials.password === "admin123") ||
-      (credentials.username === "admin" && credentials.password === "admin") ||
-      (credentials.username === "admin" && credentials.password === "password")
+      (credentials.username === "admin" && credentials.password === "admin123")
     ) {
       localStorage.setItem("dashboardAuth", "true")
       setIsAuthenticated(true)
+      navigate("/dashboard")
     } else {
-      setError("Invalid credentials. Try: admin/admin123 or admin/admin or admin/password")
+      setError("Invalid credentials.")
     }
 
     setIsLoading(false)
@@ -81,13 +80,6 @@ const DashboardLogin = ({ setIsAuthenticated }) => {
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="login-info">
-          <p>Try these credentials:</p>
-          <p>Username: admin | Password: admin123</p>
-          <p>Username: admin | Password: admin</p>
-          <p>Username: admin | Password: password</p>
-        </div>
       </div>
     </div>
   )

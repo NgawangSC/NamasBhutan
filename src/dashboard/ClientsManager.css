@@ -168,10 +168,11 @@
   color: #6b7280;
 }
 
-.clients-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+.clients-manager .clients-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.5rem !important;
+  flex-direction: unset !important;
 }
 
 .client-card {
@@ -307,6 +308,12 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .clients-manager .clients-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
 @media (max-width: 768px) {
   .clients-manager {
     padding: 1rem;
@@ -331,8 +338,8 @@
     flex-direction: column;
   }
   
-  .clients-grid {
-    grid-template-columns: 1fr;
+  .clients-manager .clients-grid {
+    grid-template-columns: 1fr !important;
   }
   
   .client-actions {
