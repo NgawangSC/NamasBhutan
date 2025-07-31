@@ -19,7 +19,7 @@ app.use(cors({
       [
         'http://localhost:3000', 
         'http://localhost:3001',
-        process.env.PRODUCTION_URL || 'https://namasbhutan.com'
+        process.env.PRODUCTION_URL || 'https://yourdomain.com'
       ];
     
     // Check if origin is allowed
