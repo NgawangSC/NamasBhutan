@@ -579,5 +579,47 @@
       "/uploads/images-1753944816660-715970208.jpg"
     ],
     "createdAt": "2025-07-31T06:53:36.662Z"
+  },
+  {
+    "id": 23,
+    "title": "Test",
+    "category": "Architecture",
+    "location": "Test",
+    "year": "Test",
+    "status": "Completed",
+    "client": "Test",
+    "designTeam": "Test",
+    "description": "Test",
+    "featured": true,
+    "image": "/uploads/images-1753945546635-545341903.jpg",
+    "images": [
+      "/uploads/images-1753945546635-545341903.jpg"
+    ],
+    "createdAt": "2025-07-31T07:05:46.639Z"
+  },
+  {
+    "id": 24,
+    "title": "123",
+    "category": "Institute",
+    "location": "312",
+    "year": "12",
+    "status": "On Hold",
+    "client": "123",
+    "designTeam": "123",
+    "description": "123",
+    "featured": true,
+    "image": "/uploads/images-1753945847504-454849158.jpg",
+    "images": [
+      "/uploads/images-1753945847504-454849158.jpg",
+      "/uploads/images-1753945847508-766561059.jpg",
+      "/uploads/images-1753945847508-936912700.jpg",
+      "/uploads/images-1753945847510-439168734.jpg",
+      "/uploads/images-1753945847512-511347188.jpg",
+      "/uploads/images-1753945847513-303843110.jpg",
+      "/uploads/images-1753945847524-582894367.jpg",
+      "/uploads/images-1753945847526-565386806.jpeg",
+      "/uploads/images-1753945847529-613348555.jpg"
+    ],
+    "createdAt": "2025-07-31T07:10:47.531Z"
   }
 ]
