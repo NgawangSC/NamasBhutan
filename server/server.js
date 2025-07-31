@@ -26,6 +26,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/uploads", express.static("uploads"))
 
+// Serve static files from React build (for production)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../build')))
+}
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -1078,6 +1083,13 @@ app.use("*", (req, res) => {
     ],
   })
 })
+
+// Catch-all handler for React Router (must be after API routes)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'))
+  })
+}
 
 // Start server
 app.listen(PORT, () => {
