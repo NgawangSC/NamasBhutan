@@ -1534,3 +1534,15 @@
   font-size: 1.1rem;
   color: #666;
 }
+
+.no-team-members {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+.no-team-members p {
+  margin: 0;
+  font-size: 1.1rem;
+}

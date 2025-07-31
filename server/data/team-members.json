@@ -7,5 +7,14 @@
     "image": "/uploads/image-1753889463462-575293089.jpg",
     "createdAt": "2025-07-30T15:30:51.976Z",
     "updatedAt": "2025-07-31T06:21:46.692Z"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "title": "Principal Designer",
+    "position": "Creative Director",
+    "image": "/images/founder-pic.png",
+    "createdAt": "2025-07-31T06:28:43.650Z",
+    "updatedAt": "2025-07-31T06:29:01.164Z"
   }
 ]
