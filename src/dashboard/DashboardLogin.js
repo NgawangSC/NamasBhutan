@@ -34,7 +34,7 @@ const DashboardLogin = ({ setIsAuthenticated }) => {
       localStorage.setItem("dashboardAuth", "true")
       setIsAuthenticated(true)
     } else {
-      setError("Invalid credentials. Try: admin/admin123 or admin/admin or admin/password")
+      setError("Invalid username or password. Please try again.")
     }
 
     setIsLoading(false)
@@ -81,13 +81,6 @@ const DashboardLogin = ({ setIsAuthenticated }) => {
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="login-info">
-          <p>Try these credentials:</p>
-          <p>Username: admin | Password: admin123</p>
-          <p>Username: admin | Password: admin</p>
-          <p>Username: admin | Password: password</p>
-        </div>
       </div>
     </div>
   )
