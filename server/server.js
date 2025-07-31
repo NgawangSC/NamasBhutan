@@ -10,14 +10,26 @@ const PORT = process.env.PORT || 5000
 
 // Middleware
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? 
-    process.env.ALLOWED_ORIGINS.split(',') : 
-    [
-      'http://localhost:3000', 
-      'http://localhost:3001',
-      // Add your production domain here
-      process.env.PRODUCTION_URL || 'https://yourdomain.com'
-    ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = process.env.ALLOWED_ORIGINS ? 
+      process.env.ALLOWED_ORIGINS.split(',') : 
+      [
+        'http://localhost:3000', 
+        'http://localhost:3001',
+        process.env.PRODUCTION_URL || 'https://yourdomain.com'
+      ];
+    
+    // Check if origin is allowed
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
