@@ -45,7 +45,7 @@ const HeroBannerManager = () => {
       }
       
       // Update the project via API
-      const result = await updateProject(project.id, updatedProjectData)
+      await updateProject(project.id, updatedProjectData)
       
       // Force refresh both projects and featured projects lists
       await Promise.all([

@@ -430,8 +430,6 @@ const ProjectsManager = () => {
   )
 
   const toggleFeatured = async (project) => {
-    const originalFeaturedStatus = project.featured
-    
     try {
       setUpdatingFeatured(project.id)
       const newFeaturedStatus = !project.featured
@@ -663,7 +661,7 @@ const ProjectsManager = () => {
                       <div key={index} className="current-image-item">
                         <img 
                           src={getImageUrl(imageUrl)} 
-                          alt={`Project image ${index + 1}`} 
+                          alt={`Project ${index + 1}`} 
                           onError={(e) => {
                             console.warn('Image failed to load:', getImageUrl(imageUrl));
                             e.target.src = "/placeholder.svg?height=150&width=200&text=Image+Not+Found";
